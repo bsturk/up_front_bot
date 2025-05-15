@@ -57,7 +57,7 @@ const CONDITIONS = {
     "HAS_MOVE_CARD": "Movement card available",
     "HAS_FLANK_CARD": "Movement with Flank card available",
     "HAS_RALLY_ALL_CARD": "Rally All card available",
-    "HAS_RALLY_NUM_CARD": "Rally (#) card available",
+    "HAS_RALLY_NUM_CARD": "Rally # card available",
     "HAS_SMOKE_CARD": "Smoke card available",
     "HAS_SNIPER_CARD": "Sniper card available",
     "HAS_TERRAIN_CARD": "Terrain card available",

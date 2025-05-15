@@ -1263,7 +1263,7 @@ function handleConcealCheck()
 
     const _totalApplicableCount = _nationConcealmentCards.reduce((_sum, _card) => _sum + _card.count, 0);
     const _probabilityOfAnyConcealment = _totalApplicableCount / window.totalDeckSize;
-    const _draw = Math.random(); // 0.0 to 1.0
+    const _draw = Math.random();
 
     if (_totalApplicableCount === 0 || _draw > _probabilityOfAnyConcealment)
     {
@@ -1291,12 +1291,11 @@ function handleConcealCheck()
 
         if (_drawnCard)
         {
-            concealResult.innerHTML = `<strong>Result:</strong> Concealment card <strong>${_drawnCard.id} (Value: ${_drawnCard.value})</strong> drawn for current ${"SLA Group"}!`;
+            concealResult.innerHTML = `<strong>Result:</strong> Concealment card <strong>${_drawnCard.value}</strong> drawn for current ${"SLA Group"}!`;
             concealResult.className = 'instruction result-output status-good';
         }
         else
         {
-            // This case should ideally not be reached if _totalApplicableCount > 0 and _draw <= _probabilityOfAnyConcealment
             concealResult.innerHTML = `<strong>Result:</strong> No Concealment card drawn (edge case). Probability: ${_probabilityOfAnyConcealment.toFixed(4)}, Draw: ${_draw.toFixed(4)}`;
             concealResult.className = 'instruction result-output status-stressed-moderate';
             console.warn("Concealment draw logic reached an unexpected state.", {
