@@ -613,7 +613,7 @@ const NATIONS = {
     BRITISH: 'Britain', JAPANESE: 'Japan', FRENCH: 'France', ITALIAN: 'Italy'
 };
 
-const concealmentCardData = [
+window.concealmentCardData = [
     { value: -1, count: 6, usableBy: [NATIONS.GERMAN, NATIONS.AMERICAN, NATIONS.RUSSIAN, NATIONS.BRITISH, NATIONS.JAPANESE, NATIONS.FRENCH, NATIONS.ITALIAN], id: "C-1_all"},
     { value: -1, count: 4, usableBy: [NATIONS.RUSSIAN, NATIONS.BRITISH, NATIONS.FRENCH], id: "C-1_RBF" },
     { value: -1, count: 2, usableBy: [NATIONS.GERMAN, NATIONS.AMERICAN, NATIONS.RUSSIAN, NATIONS.BRITISH, NATIONS.JAPANESE, NATIONS.FRENCH], id: "C-1_noIT" },
@@ -623,4 +623,4 @@ const concealmentCardData = [
     { value: -3, count: 2, usableBy: [NATIONS.GERMAN, NATIONS.AMERICAN, NATIONS.RUSSIAN, NATIONS.BRITISH, NATIONS.JAPANESE, NATIONS.FRENCH, NATIONS.ITALIAN], id: "C-3_all" },
 ];
 
-const totalDeckSize = 162;
+window.totalDeckSize = 162;
