@@ -31,14 +31,14 @@ If you do manually setup groups, be sure to select a nationality on the "Game Ac
     1.  Choose the **Scenario** you are playing from the dropdown.
     2.  Select the **SLA Nationality** from the dropdown. This will also populate the Nationality on the "Game Actions" tab.
     3.  The **SLA Stance** dropdown will populate with available stances (Attacker/Defender) for the selected Nationality in that Scenario. Choose the appropriate one.
-*   **Generate Groups:** Click the **"Generate Groups"** button.
-*   **Results:** The "Generated SLA Groups" section will display the units assigned to each SLA group (A, B, C, D).
+*   Click the **"Generate Groups"** button.
+*   ** The "Generated SLA Groups" section will display the units assigned to each SLA group (A, B, C, D).
 
     ![Scenario Selection Screenshot](img/SCREENSHOT_SETUP_TAB_FILLED_AND_RESULTS.png)
 
-### 2. Game Actions Tab (Main Gameplay)
+### 2. Game Actions Tab
 
-This is the primary tab you'll use during the game to determine SLA actions.
+This is the page you'll use during the game to determine SLA actions.
 
 #### A. Initial Setup (Each SLA Turn / Before First SLA Group Activation)
 
@@ -51,9 +51,11 @@ This is the primary tab you'll use during the game to determine SLA actions.
 
     ![Initial Group Setup Screenshot](img/SCREENSHOT_GAME_ACTIONS_GLOBAL_SETTINGS.png)
 
-2.  **SLA Activation:**
-    *   The app reminds you of the process: Draw SLA cards, use the leftmost card's RPN to determine the acting group, and use its RNC for the action calculations.
+2.  **SLA Turn and Activation:**
+    *   Draw SLA's hand of cards
+    *   Use the leftmost card's RPN to determine the acting group, and use its RNC for the action calculations.
     *   **Select the RNC value of this leftmost card** by clicking the corresponding number (Black or Red) in the grid of RNC values.
+    *   **When going to the next SLA Group, move the rightmost card to the leftmost position.**
 
     ![SLA Activation Screenshot](img/SCREENSHOT_GAME_ACTIONS_RNC_SELECTOR.png)
 
@@ -66,27 +68,17 @@ This is the primary tab you'll use during the game to determine SLA actions.
 
     ![SLA Group Stability Inputs Screenshot](img/SCREENSHOT_GAME_ACTIONS_STABILITY_INPUTS.png)
 
-#### B. Player Interaction with SLA (As it Happens)
-
-*   **When Player fires at SLA Group:**
-    *   Click **"Check Concealment"**. The result (e.g., "No Concealment", "Concealment (-2)") will be displayed.
-*   **When Player places Terrain on SLA Group:**
-    1.  Select the **Terrain Type** being placed from the dropdown.
-    2.  Click **"Check Acceptance"**. The result will indicate if the SLA group accepts or refuses the terrain, along with any consequences.
-
-    ![Player Interaction Screenshot](img/SCREENSHOT_GAME_ACTIONS_PLAYER_INTERACTION.png)
-
-#### C. SLA Group Action Selection
+#### B. SLA Group Action Selection
 
 Once the RNC is selected and stability inputs are set:
 
-1.  **Action Priority List:** The <SLA Group Action Selection" section will display a prioritized list of potential actions.
+1.  **Action Priority List:** The **SLA Group Action Selection** section will display a prioritized list of potential actions.
     *   Each item shows the **Action Type**, **Trigger Conditions**, **Targeting Priority**, and **Instruction**.
 2.  **Select Action:** Read down the list. **Click on the *first* valid action** that the SLA group can actually perform given the current game state (cards in hand, available targets, etc.).
 3.  **Post-Action Steps:** After clicking an action:
     *   The selected action will be highlighted.
     *   Detailed **"Post-Action Steps (Main Action)"** will appear below it. Follow these steps.
-    *   A button **"Done with Main Actions"** will appear.  Only click this after all SLA groups have activated.
+    *   A button **"Done with Main Action(s)"** will appear.  **Only click this after all SLA groups have activated**.
     *   If not done with main actions, go to the next SLA group and repeat this process (input RNC, check boxes, etc).
         Remember to move the rightmost SLA hand card to the leftmost position for the next SLA activation.
 
@@ -94,7 +86,7 @@ Once the RNC is selected and stability inputs are set:
 
 4.  **Proceed to Discard Phase:** Click **"Done with Main Action(s)"**.
 
-#### D. Discard Action Phase
+#### C. Discard Action Phase
 
 1.  **Discard Actions Remaining:** How many discard actions the SLA can take (based on nationality) will be shown.
 2.  **Discard Priority List:** A list of available discard actions will appear.
@@ -108,6 +100,16 @@ Once the RNC is selected and stability inputs are set:
 
 5.  **End of SLA Group Turn:** After clicking "Done with Discard Action(s)", the section will indicate the SLA group's turn is complete.
     *   Now that all SLA groups have activated, the main SLA turn is over and it is the player's turn.
+
+#### D. Player Interaction with SLA (as needed during gameplay)
+
+*   **When Player fires at SLA Group:**
+    *   Click **"Check Concealment"**. (e.g., "No Concealment", "Concealment (-2)") will be displayed.
+*   **When Player places Terrain on SLA Group:**
+    1.  Select the **Terrain Type** being placed from the dropdown.
+    2.  Click **"Check Acceptance"**. Will indicate if the SLA group accepts or refuses the terrain.
+
+    ![Player Interaction Screenshot](img/SCREENSHOT_GAME_ACTIONS_PLAYER_INTERACTION.png)
 
 ### 3. Game Util Tab
 
