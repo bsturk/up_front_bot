@@ -86,6 +86,7 @@ Once the RNC is selected and stability inputs are set:
     *   The selected action will be highlighted.
     *   Detailed **"Post-Action Steps (Main Action)"** will appear below it. Follow these steps.
     *   A button **"Done with Main Actions"** will appear.  Only click this after all SLA groups have activated.
+    *   If not done with main actions, click go to the next SLA group and repeat the process.
 
     `[img/SCREENSHOT_GAME_ACTIONS_PRIORITY_LIST_AND_SELECTION.png]`
 
@@ -101,7 +102,7 @@ Once the RNC is selected and stability inputs are set:
     *   If more discard actions are available and one was taken, the button will say **"Choose next Discard Action"**. Click it to refresh the discard list.
     *   If no more discards can be taken, or "No Discard Action" was chosen, the button will say **"End Discard Phase"**. Click it.
 
-    `[SCREENSHOT_GAME_ACTIONS_DISCARD_PHASE.png]`
+    `[img/SCREENSHOT_GAME_ACTIONS_DISCARD_PHASE.png]`
 
 5.  **End of SLA Group Turn:** After clicking "End Discard Phase", the section will indicate the SLA group's turn is complete. Remember to move the rightmost SLA hand card to the leftmost position for the next SLA activation.
     *   If all SLA groups have activated, the main SLA turn is over.
@@ -115,7 +116,7 @@ This tab provides helpful utilities for playing the game.
 1.  **Input Range Chits:** For two groups (SLA or Player), click the button corresponding to the value on each group's Range Chit (-3 to +8).
 2.  **View Result:** The **Relative Range** will be calculated and displayed, along with the formula used.
 
-    `[SCREENSHOT_UTIL_TAB_RANGE_CALCULATOR.png]`
+    `[img/SCREENSHOT_UTIL_TAB_RANGE_CALCULATOR.png]`
 
 ## 💡 Tips
 
