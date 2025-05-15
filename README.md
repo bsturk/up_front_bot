@@ -34,7 +34,7 @@ If you do manually setup groups, be sure to select a nationality on the "Game Ac
 *   **Generate Groups:** Click the **"Generate Groups"** button.
 *   **Results:** The "Generated SLA Groups" section will display the units assigned to each SLA group (A, B, C, D).
 
-    !(img/SCREENSHOT_SETUP_TAB_FILLED_AND_RESULTS.png)
+    ![Scenario Selection Screenshot](img/SCREENSHOT_SETUP_TAB_FILLED_AND_RESULTS.png)
 
 ### 2. Game Actions Tab (Main Gameplay)
 
@@ -49,13 +49,13 @@ This is the primary tab you'll use during the game to determine SLA actions.
     *   **SL Pinned/KIA:** Check this box if the acting SLA leader (SL or promoted ASL) is Pinned or KIA. This affects hand size and stability.
     *   **Nationality Notes:** Any special notes for the selected nationality will appear here.
 
-    !(img/SCREENSHOT_GAME_ACTIONS_GLOBAL_SETTINGS.png)
+    ![Initial Group Setup Screenshot](img/SCREENSHOT_GAME_ACTIONS_GLOBAL_SETTINGS.png)
 
 2.  **SLA Activation:**
     *   The app reminds you of the process: Draw SLA cards, use the leftmost card's RPN to determine the acting group, and use its RNC for the action calculations.
     *   **Select the RNC value of this leftmost card** by clicking the corresponding number (Black or Red) in the grid of RNC values.
 
-    !(img/SCREENSHOT_GAME_ACTIONS_RNC_SELECTOR.png)
+    ![SLA Activation Screenshot](img/SCREENSHOT_GAME_ACTIONS_RNC_SELECTOR.png)
 
 3.  **SLA Group Stability Inputs:**
     *   For the **currently acting SLA group**, fill in its status:
@@ -64,7 +64,7 @@ This is the primary tab you'll use during the game to determine SLA actions.
         *   **In Wire, Is Flanking, Is Entrenched, Is Flanked, Is Encircled, Is Moving:** Check applicable boxes.
     *   The **Status Display** (e.g., "Status: Effective", "Status: Stressed") and Action Priority List will update automatically.
 
-    !(img/SCREENSHOT_GAME_ACTIONS_STABILITY_INPUTS.png)
+    ![SLA Group Stability Inputs Screenshot](img/SCREENSHOT_GAME_ACTIONS_STABILITY_INPUTS.png)
 
 #### B. Player Interaction with SLA (As it Happens)
 
@@ -74,7 +74,7 @@ This is the primary tab you'll use during the game to determine SLA actions.
     1.  Select the **Terrain Type** being placed from the dropdown.
     2.  Click **"Check Acceptance"**. The result will indicate if the SLA group accepts or refuses the terrain, along with any consequences.
 
-    !(img/SCREENSHOT_GAME_ACTIONS_PLAYER_INTERACTION.png)
+    ![Player Interaction Screenshot](img/SCREENSHOT_GAME_ACTIONS_PLAYER_INTERACTION.png)
 
 #### C. SLA Group Action Selection
 
@@ -90,7 +90,7 @@ Once the RNC is selected and stability inputs are set:
     *   If not done with main actions, go to the next SLA group and repeat this process (input RNC, check boxes, etc).
         Remember to move the rightmost SLA hand card to the leftmost position for the next SLA activation.
 
-    !(img/SCREENSHOT_GAME_ACTIONS_PRIORITY_LIST_AND_SELECTION.png)
+    ![Priority List and Selection Screenshot](img/SCREENSHOT_GAME_ACTIONS_PRIORITY_LIST_AND_SELECTION.png)
 
 4.  **Proceed to Discard Phase:** Click **"Done with Main Action(s)"**.
 
@@ -104,7 +104,7 @@ Once the RNC is selected and stability inputs are set:
     *   If more discard actions are available and one was taken, the button will say **"Choose next Discard Action"**. Click it to refresh the discard list.
     *   If no more discards can be taken, or "No Discard Action" was chosen, the click the **"Done with Discard Action(s)"** button.
 
-    !(img/SCREENSHOT_GAME_ACTIONS_DISCARD_PHASE.png)
+    ![Discard Phase Screenshot](img/SCREENSHOT_GAME_ACTIONS_DISCARD_PHASE.png)
 
 5.  **End of SLA Group Turn:** After clicking "Done with Discard Action(s)", the section will indicate the SLA group's turn is complete.
     *   Now that all SLA groups have activated, the main SLA turn is over and it is the player's turn.
@@ -118,7 +118,7 @@ This tab provides utilities for playing the game (currently only a relative rang
 1.  **Input Range Chits:** For two groups (SLA or Player), click the button corresponding to the value on each group's Range Chit (-3 to +8).
 2.  **View Result:** The **Relative Range** will be calculated and displayed, along with the formula used.
 
-    !(img/SCREENSHOT_UTIL_TAB_RANGE_CALCULATOR.png)
+    ![Range Calculator Screenshot](img/SCREENSHOT_UTIL_TAB_RANGE_CALCULATOR.png)
 
 ## 💡 Tips
 
