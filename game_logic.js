@@ -730,7 +730,7 @@ function updateSLAState() {
                 itemDiv.insertAdjacentElement('afterend', postActionDetailsDiv);
 
                 if (doneActionsButton) {
-                    doneActionsButton.textContent = 'Done with Main Action';
+                    doneActionsButton.textContent = 'Done with Main Action(s)';
                     doneActionsButton.style.display = 'block';
                 }
             });
@@ -740,7 +740,7 @@ function updateSLAState() {
 
         const instructionsPara = document.createElement('p');
         instructionsPara.classList.add('general-instructions');
-         instructionsPara.innerHTML = `<em>Evaluate the actual game state (cards in hand, targets, terrain, eligibility etc.). Click the <strong>first valid</strong> action sequence ${"SLA Group"} can take based on the list above. Follow the detailed post-action steps that appear. Then click "Done Actions" to proceed to the Discard Action phase.</em>`;
+         instructionsPara.innerHTML = `<em>Evaluate the actual game state (cards in hand, targets, terrain, eligibility etc.). Click the <strong>first valid</strong> action sequence ${"SLA Group"} can take based on the list above. Follow the detailed post-action steps that appear. Then click "Done with Main Action(s)" to proceed to the Discard Action phase.</em>`;
         priorityList.appendChild(instructionsPara);
 
         if (troopQuality === "Green") {
@@ -857,7 +857,7 @@ function updateSLAState() {
                  div.insertAdjacentElement('afterend', postActionDetailsDiv);
 
                  if (doneActionsButton) {
-                     doneActionsButton.textContent = 'Done with Main Action';
+                     doneActionsButton.textContent = 'Done with Main Action(s)';
                      doneActionsButton.style.display = 'block';
                  }
              });
@@ -866,7 +866,7 @@ function updateSLAState() {
 
              const instructionsPara = document.createElement('p');
              instructionsPara.classList.add('general-instructions');
-             instructionsPara.innerHTML = `<em>No other valid actions found for the current state and RNC. Click '${holdActionText}' above then follow the post-action steps for ${"SLA Group"}. Then click "Done Actions" to proceed to the Discard Action phase.</em>`;
+             instructionsPara.innerHTML = `<em>No other valid actions found for the current state and RNC. Click '${holdActionText}' above then follow the post-action steps for ${"SLA Group"}. Then click "Done with Main Action(s)" to proceed to the Discard Action phase.</em>`;
              priorityList.appendChild(instructionsPara);
 
          } else {
@@ -903,7 +903,7 @@ function handleStartDiscardPhase() {
     slaGroupState.lastActionTaken = null;
 
     if (doneActionsButton) {
-        doneActionsButton.textContent = 'Done with Discard Actions';
+        doneActionsButton.textContent = 'Done with Discard Action(s)';
         doneActionsButton.style.display = 'block';
     }
 
@@ -1589,7 +1589,7 @@ function initializeGameLogic() {
                      }
                 } else {
                      if (doneActionsButton) {
-                          doneActionsButton.textContent = 'Done with Discard Actions (Error)';
+                          doneActionsButton.textContent = 'Done with Discard Action(s) (Error)';
                           doneActionsButton.style.display = 'block';
                      }
                 }
@@ -1624,7 +1624,7 @@ function initializeGameLogic() {
                      if (remainingAfterClick > 0) {
                           doneActionsButton.textContent = 'Choose next Discard Action';
                      } else {
-                          doneActionsButton.textContent = 'Done with Discard Actions';
+                          doneActionsButton.textContent = 'Done with Discard Action(s)';
                      }
                       doneActionsButton.style.display = 'block';
                  }

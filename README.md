@@ -33,8 +33,7 @@ This tab helps you generate the initial SLA groups for a scenario. Using this is
 *   **Generate Groups:** Click the **"Generate Groups"** button.
 *   **Results:** The "Generated SLA Groups" section will display the units assigned to each SLA group (A, B, C, D).
 
-    `[SCREENSHOT_SETUP_TAB_FILLED_AND_RESULTS.png]`
-    *(Caption: Example of the Setup Tab with options selected and generated groups displayed.)*
+    `[img/SCREENSHOT_SETUP_TAB_FILLED_AND_RESULTS.png]`
 
 ### 2. Game Actions Tab (Main Gameplay)
 
@@ -49,15 +48,13 @@ This is the primary tab you'll use during the game to determine SLA actions.
     *   **SL Pinned/KIA:** Check this box if the acting SLA leader (SL or promoted ASL) is Pinned or KIA. This affects hand size and stability.
     *   **Nationality Notes:** Any special notes for the selected nationality will appear here.
 
-    `[SCREENSHOT_GAME_ACTIONS_GLOBAL_SETTINGS.png]`
-    *(Caption: Global settings bar on the Game Actions tab.)*
+    `[img/SCREENSHOT_GAME_ACTIONS_GLOBAL_SETTINGS.png]`
 
 2.  **SLA Activation (As per game rules):**
     *   The app reminds you of the process: Draw SLA cards, use the leftmost card's RPN to determine the acting group, and use its RNC for the action calculations.
     *   **Crucially, select the RNC value of this leftmost card** in the "RNC of left-most revealed Action Card" section by clicking the corresponding number (Black or Red).
 
-    `[SCREENSHOT_GAME_ACTIONS_RNC_SELECTOR.png]`
-    *(Caption: Selecting the RNC value on the Game Actions tab.)*
+    `[img/SCREENSHOT_GAME_ACTIONS_RNC_SELECTOR.png]`
 
 3.  **SLA Group Stability Inputs:**
     *   For the **currently acting SLA group**, fill in its status:
@@ -66,8 +63,7 @@ This is the primary tab you'll use during the game to determine SLA actions.
         *   **In Wire, Is Flanking, Is Entrenched, Is Flanked, Is Encircled, Is Moving:** Check applicable boxes.
     *   The **Status Display** (e.g., "Status: Effective", "Status: Stressed") will update automatically.
 
-    `[SCREENSHOT_GAME_ACTIONS_STABILITY_INPUTS.png]`
-    *(Caption: SLA Group Stability input fields.)*
+    `[img/SCREENSHOT_GAME_ACTIONS_STABILITY_INPUTS.png]`
 
 #### B. Player Interaction with SLA (As it Happens)
 
@@ -77,8 +73,7 @@ This is the primary tab you'll use during the game to determine SLA actions.
     1.  Select the **Terrain Type** being placed from the dropdown.
     2.  Click **"Check Acceptance"**. The result will indicate if the SLA group accepts or refuses the terrain, along with any consequences.
 
-    `[SCREENSHOT_GAME_ACTIONS_PLAYER_INTERACTION.png]`
-    *(Caption: Concealment and Terrain Acceptance check sections.)*
+    `[img/SCREENSHOT_GAME_ACTIONS_PLAYER_INTERACTION.png]`
 
 #### C. SLA Group Action Selection
 
@@ -90,12 +85,11 @@ Once the RNC is selected and stability inputs are set:
 3.  **Post-Action Steps:** After clicking an action:
     *   The selected action will be highlighted.
     *   Detailed **"Post-Action Steps (Main Action)"** will appear below it. Follow these steps.
-    *   A button **"Done with Main Action"** will appear.
+    *   A button **"Done with Main Actions"** will appear.  Only click this after all SLA groups have activated.
 
-    `[SCREENSHOT_GAME_ACTIONS_PRIORITY_LIST_AND_SELECTION.png]`
-    *(Caption: SLA Action Priority List with an action selected and post-action steps visible.)*
+    `[img/SCREENSHOT_GAME_ACTIONS_PRIORITY_LIST_AND_SELECTION.png]`
 
-4.  **Proceed to Discard Phase:** Click **"Done with Main Action"**.
+4.  **Proceed to Discard Phase:** Click **"Done with Main Actions"**.
 
 #### D. Discard Action Phase
 
@@ -108,7 +102,6 @@ Once the RNC is selected and stability inputs are set:
     *   If no more discards can be taken, or "No Discard Action" was chosen, the button will say **"End Discard Phase"**. Click it.
 
     `[SCREENSHOT_GAME_ACTIONS_DISCARD_PHASE.png]`
-    *(Caption: The Discard Action phase.)*
 
 5.  **End of SLA Group Turn:** After clicking "End Discard Phase", the section will indicate the SLA group's turn is complete. Remember to move the rightmost SLA hand card to the leftmost position for the next SLA activation.
     *   If all SLA groups have activated, the main SLA turn is over.
@@ -123,7 +116,6 @@ This tab provides helpful utilities for playing the game.
 2.  **View Result:** The **Relative Range** will be calculated and displayed, along with the formula used.
 
     `[SCREENSHOT_UTIL_TAB_RANGE_CALCULATOR.png]`
-    *(Caption: The Relative Range Calculator on the Game Util tab.)*
 
 ## 💡 Tips
 
