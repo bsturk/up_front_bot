@@ -1488,7 +1488,7 @@ function initializeGameLogic() {
 
 
     const stateChangeInputs = [
-        slaTroopQualitySelect, slPinnedKIAInput, inWireInput, isFlankedInput,
+        pinnedCountInput, slaTroopQualitySelect, slPinnedKIAInput, inWireInput, isFlankedInput,
         isMovingInput, isFlankingInput, isEncircledInput, isEntrenchedInput, terrainTypeSelect, stanceSelect
     ];
 
