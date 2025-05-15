@@ -303,7 +303,6 @@ const POST_ACTION_INSTRUCTIONS = {
     END_DISCARD_PHASE: "The turn is over for the SLA player.",
 };
 
-
 const ACTION_DEFINITIONS = {
     RALLY_ALL: {
         text: ACTIONS.RALLY_ALL.text, type: ACTIONS.RALLY_ALL.type,
@@ -556,48 +555,46 @@ const DISCARD_ACTION_DEFINITIONS = {
     }
 };
 
-// PRIORITY_COLORS is no longer used, colors are handled by CSS classes.
-
 const slaPriorities = {
     Line: {
         Effective: [
-            { actionRef: "RALLY_ALL",           rncCondition: {},                                priority: 0 },
-            { actionRef: "RALLY_NUM",           rncCondition: {},                                priority: 0 },
-            { actionRef: "PLACE_TERRAIN_SELF",  rncCondition: { red: "ANY" },                    priority: 0 },
-            { actionRef: "FIRE_HIGH_OPP",       rncCondition: { black: ["0...1"] },              priority: 2 },
-            { actionRef: "FIRE_OPP",            rncCondition: { black: ["2...6"] },              priority: 0 },
-            { actionRef: "FIRE_GEN",            rncCondition: { red: "ANY" },                    priority: 0 },
-            { actionRef: "INFILTRATE_MOVE",     rncCondition: {},                                priority: 0 },
-            { actionRef: "INFILTRATE_MORALE",   rncCondition: { black: "ANY" },                  priority: 0 },
-            { actionRef: "MOVE_FLANK",          rncCondition: { black: ["2...6"] },              priority: 0 },
-            { actionRef: "MOVE_ADVANCE",        rncCondition: { black: "ANY", red: ["0...2"] },  priority: 0 },
-            { actionRef: "MOVE_OBJECTIVE",      rncCondition: {},                                priority: 3 },
-            { actionRef: "LAY_SMOKE",           rncCondition: { black: "ANY" },                  priority: 0 },
-            { actionRef: "ENTRENCH",            rncCondition: { red: ["2...6"] },                priority: 0 },
-            { actionRef: "FIX_WEAPON",          rncCondition: {},                                priority: 0 },
-            { actionRef: "ACQUIRE_WEAPON",      rncCondition: {},                                priority: 0 },
-            { actionRef: "CHANGE_CREW",         rncCondition: {},                                priority: 0 },
-            { actionRef: "TRANSFER_IND",        rncCondition: {},                                priority: 0 },
-            { actionRef: "PLACE_TERRAIN_SELF",  rncCondition: {},                                priority: 0 },
-            { actionRef: "HOLD",                rncCondition: {},                                priority: 0 }
+            { actionRef: "MOVE_OBJECTIVE",        rncCondition:   {},                                priority: 3 },
+            { actionRef: "FIRE_HIGH_OPP",         rncCondition:   { black: ["0...1"] },              priority: 2 },
+            { actionRef: "RALLY_ALL",             rncCondition:   {},                                priority: 0 },
+            { actionRef: "RALLY_NUM",             rncCondition:   {},                                priority: 0 },
+            { actionRef: "PLACE_TERRAIN_SELF",    rncCondition:   { red: "ANY" },                    priority: 0 },
+            { actionRef: "FIRE_OPP",              rncCondition:   { black: ["2...6"] },              priority: 0 },
+            { actionRef: "FIRE_GEN",              rncCondition:   { red: "ANY" },                    priority: 0 },
+            { actionRef: "INFILTRATE_MOVE",       rncCondition:   { red: "ANY" },                    priority: 0 },
+            { actionRef: "INFILTRATE_MORALE",     rncCondition:   { black: "ANY" },                  priority: 0 },
+            { actionRef: "MOVE_FLANK",            rncCondition:   { black: ["2...6"] },              priority: 0 },
+            { actionRef: "MOVE_ADVANCE",          rncCondition:   { black: "0...1", red: "ANY" },    priority: 0 },
+            { actionRef: "LAY_SMOKE",             rncCondition:   { black: "ANY" },                  priority: 0 },
+            { actionRef: "ENTRENCH",              rncCondition:   { red: "ANY" },                    priority: 0 },
+            { actionRef: "FIX_WEAPON",            rncCondition:   {},                                priority: 0 },
+            { actionRef: "ACQUIRE_WEAPON",        rncCondition:   {},                                priority: 0 },
+            { actionRef: "CHANGE_CREW",           rncCondition:   {},                                priority: 0 },
+            { actionRef: "TRANSFER_IND",          rncCondition:   {},                                priority: 0 },
+            { actionRef: "PLACE_TERRAIN_SELF",    rncCondition:   {},                                priority: 0 },
+            { actionRef: "HOLD",                  rncCondition:   {},                                priority: 0 }
         ],
         Stressed: [
-            { actionRef: "REMOVE_MINEFIELD",    rncCondition: {},                                priority: 0 },
-            { actionRef: "EXIT_MINEFIELD",      rncCondition: {},                                priority: 0 },
-            { actionRef: "REMOVE_WIRE",         rncCondition: {},                                priority: 2 },
-            { actionRef: "BANZAI",              rncCondition: {},                                priority: 3 },
-            { actionRef: "RALLY_ALL",           rncCondition: {},                                priority: 0 },
-            { actionRef: "RALLY_NUM",           rncCondition: {},                                priority: 0 },
-            { actionRef: "PLACE_TERRAIN_SELF",  rncCondition: {},                                priority: 0 },
-            { actionRef: "MOVE_RETREAT",        rncCondition: {},                                priority: 0 },
-            { actionRef: "MOVE_RETREAT_SIDEWAYS", rncCondition: { red: ["2...6"] },              priority: 0 },
-            { actionRef: "LAY_SMOKE",           rncCondition: {},                                priority: 0 },
-            { actionRef: "FIX_WEAPON",          rncCondition: {},                                priority: 0 },
-            { actionRef: "ENTRENCH",            rncCondition: { red: ["4...6"] },                priority: 0 },
-            { actionRef: "FIRE_DEF",            rncCondition: {},                                priority: 0 },
-            { actionRef: "FIRE_CLOSE_THREAT",   rncCondition: { red: ["3...6"] },                priority: 0 },
-            { actionRef: "MOVE_CAUTIOUS",       rncCondition: {},                                priority: 0 },
-            { actionRef: "HOLD",                rncCondition: {},                                priority: 0 }
+            { actionRef: "BANZAI",                rncCondition:   {},                                priority: 3 },
+            { actionRef: "REMOVE_WIRE",           rncCondition:   {},                                priority: 2 },
+            { actionRef: "REMOVE_MINEFIELD",      rncCondition:   {},                                priority: 1 },
+            { actionRef: "EXIT_MINEFIELD",        rncCondition:   {},                                priority: 0 },
+            { actionRef: "RALLY_ALL",             rncCondition:   {},                                priority: 0 },
+            { actionRef: "RALLY_NUM",             rncCondition:   {},                                priority: 0 },
+            { actionRef: "PLACE_TERRAIN_SELF",    rncCondition:   {},                                priority: 0 },
+            { actionRef: "MOVE_CAUTIOUS",         rncCondition:   { black: "0...2" },                priority: 0 },
+            { actionRef: "MOVE_RETREAT",          rncCondition:   { black: "ANY", red: "0...1"},     priority: 0 },
+            { actionRef: "MOVE_RETREAT_SIDEWAYS", rncCondition:   { red: ["2...6"] },                priority: 0 },
+            { actionRef: "LAY_SMOKE",             rncCondition:   {},                                priority: 0 },
+            { actionRef: "FIX_WEAPON",            rncCondition:   {},                                priority: 0 },
+            { actionRef: "ENTRENCH",              rncCondition:   { red: ["4...6"] },                priority: 0 },
+            { actionRef: "FIRE_DEF",              rncCondition:   { black: "ANY" },                  priority: 0 },
+            { actionRef: "FIRE_CLOSE_THREAT",     rncCondition:   { red: "ANY" },                    priority: 0 },
+            { actionRef: "HOLD",                  rncCondition:   {},                                priority: 0 }
         ]
     }
 };
