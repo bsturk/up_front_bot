@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Up Front SLA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Up Front SLA (Squad Leader Automa)</h1>
+
+    <div class="tab-container">
+        <button class="tab-button" id="tabSetup">Group Setup</button>
+        <button class="tab-button" id="tabGame">Game Actions</button>
+        <button class="tab-button" id="tabUtil">Game Util</button>
+    </div>
+
+    <div id="gameContent" class="tab-content">
+        <div class="global-settings">
+             <div class="settings-row">
+                <label for="slaNationality">SLA Nationality:</label>
+                <select id="slaNationality">
+                    <option value="">-- Select --</option>
+                </select>
+                <label for="slaTroopQuality">Troop Quality:</label>
+                <select id="slaTroopQuality">
+                    <option value="Line">Line (Default)</option>
+                    <option value="Elite">Elite</option>
+                    <option value="Second Line">Second Line</option>
+                    <option value="Partisans (Rus)">Partisans (Rus)</option>
+                    <option value="Marines (US)">Marines (US)</option>
+                </select>
+                 <span class="setting-detail">
+                    <label>Hand Size:</label> <strong id="slaHandSizeDisplay">-</strong>
+                </span>
+                <div class="setting-detail sl-pinned-container">
+                   <label for="slPinnedKIA">SL Pinned/KIA:</label>
+                   <input type="checkbox" id="slPinnedKIA" title="Check if acting leader (SL or promoted ASL) is Pinned/KIA this turn, reducing hand size by 1 and affecting stability.">
+                </div>
+				 <div id="slaNationalityNotes" class="nationality-notes-display" style="display: none;">
+                 </div>
+             </div>
+        </div>
+
+        <div class="container">
+            <div class="setup-controls section">
+                <h2><span class="sla-group-term">SLA Group</span> Activation</h2>
+                 <div class="ai-reminder-text">
+                    <ol style="margin-top: 5px; margin-bottom: 15px; padding-left: 20px;">
+                        <li>Draw cards up to the SLA's hand size shown above, placing them left to right.</li>
+                        <li>The <strong>leftmost card</strong> determines which SLA group activates. The blue number in the RPN row matching the <strong>current count of unactivated SLA groups</strong>.</li>
+                        <li>The RPN value below the blue number selects which group acts. This number corresponds to the Nth group in the standard order (A, B, C...) among only those <strong>currently unactivated</strong>.<br>
+                            <em style="font-size: 0.9em; color: #555;">Example: If groups A, B, D are unactivated, RPN '1' selects A, '2' selects B, '3' selects D.</em>
+                        </li>
+                        <li>The <strong>leftmost card's</strong> RNC value is used to the right (click the number) for calculations for the acting group.</li>
+                        <li><strong>After the current group completes its action(s):</strong> Move the <strong>rightmost card</strong> in the SLA's hand to the <strong>leftmost position</strong>. This becomes the card used for the <em>next</em> SLA activation.</li>
+                    </ol>
+                 </div>
+                 <hr>
+
+                 <h2>When Player fires at <span class="sla-group-term">SLA Group</span>:</h2>
+                 <button id="checkConcealButton">Check Concealment</button>
+                 <div id="concealResult" class="instruction result-output"></div>
+
+                 <hr>
+                 <h2>When Player places Terrain on <span class="sla-group-term">SLA Group</span>:</h2>
+                 <div class="setup-grid">
+                      <label for="terrainPlaced">Terrain Type:</label>
+                      <select id="terrainPlaced">
+                          <option value="">-- Select Terrain --</option>
+                          <option value="Woods">Woods</option>
+                          <option value="Building">Building</option>
+                          <option value="Brush">Brush</option>
+                          <option value="Gully">Gully</option>
+                          <option value="Hill">Hill</option>
+                          <option value="Marsh">Marsh</option>
+                          <option value="Minefield">Minefield</option>
+                          <option value="Stream">Stream</option>
+                          <option value="Walls">Walls</option>
+                          <option value="Wire">Wire</option>
+                      </select>
+                 </div>
+                 <button id="checkTerrainAcceptanceButton">Check Acceptance</button>
+                 <div id="terrainPlacementResult" class="instruction result-output"></div>
+                  <p style="font-size: 0.85em; color: #666;"><em>(Ensure <span id="dynamicSlaGroupRefHint">SLA Group</span> has an exposed Movement card and is eligible before checking.)</em></p>
+            </div>
+
+            <div class="stability-inputs section">
+                 <h2><span id="dynamicSlaGroupRefStabilityH2">SLA Group</span> Stability </h2>
+                 <div id="statusDisplay">Status: ---</div>
+
+                <div class="input-grid stability-grid">
+                    <div>
+                        <label for="pinnedCount">Pinned Units:</label>
+                        <input type="number" id="pinnedCount" value="0" min="0">
+                    </div>
+                    <div>
+                        <label for="terrainType">Terrain:</label>
+                        <select id="terrainType" style="width: 150px;">
+                            <option value="Open Ground">Open Ground</option>
+                            <option value="Stream">Stream</option>
+                            <option value="Minefield">Minefield</option>
+                            <option value="Marsh">Marsh</option>
+                            <option value="Gully">Gully</option>
+                            <option value="Brush">Brush</option>
+                            <option value="Woods">Woods</option>
+                            <option value="Buildings">Buildings</option>
+                            <option value="Walls">Walls</option>
+                            <option value="Hill">Hill</option>
+                            <option value="Pillbox">Pillbox</option>
+                            <!-- Wire is handled by its checkbox -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="inWire">In Wire:</label>
+                       <input type="checkbox" id="inWire">
+                    </div>
+                    <div>
+                        <label for="isFlanking">Is Flanking any Group:</label>
+                        <input type="checkbox" id="isFlanking">
+                    </div>
+                    <div>
+                       <label for="isEntrenched">Is Entrenched:</label>
+                       <input type="checkbox" id="isEntrenched">
+                    </div>
+                    <div>
+                        <label for="isFlanked">Is Flanked:</label>
+                        <input type="checkbox" id="isFlanked">
+                    </div>
+                    <div>
+                       <label for="isEncircled">Is Encircled:</label>
+                       <input type="checkbox" id="isEncircled">
+                    </div>
+                    <div>
+                        <label for="isMoving">Is Moving:</label>
+                        <input type="checkbox" id="isMoving">
+                    </div>
+                </div>
+
+                 <hr>
+                 <div>
+                    <label style="display: block; margin-bottom: 5px;"><strong>RNC of left-most revealed Action Card:</strong></label>
+                    <div id="rncSelector">
+                        <div class="rnc-row rnc-black-row">
+                            <span class="rnc-number rnc-black" data-value="0">0</span>
+                            <span class="rnc-number rnc-black" data-value="1">1</span>
+                            <span class="rnc-number rnc-black" data-value="2">2</span>
+                            <span class="rnc-number rnc-black" data-value="3">3</span>
+                            <span class="rnc-number rnc-black" data-value="4">4</span>
+                            <span class="rnc-number rnc-black" data-value="5">5</span>
+                            <span class="rnc-number rnc-black" data-value="6">6</span>
+                        </div>
+                        <div class="rnc-row rnc-red-row">
+                            <span class="rnc-number rnc-red" data-value="0">0</span>
+                            <span class="rnc-number rnc-red" data-value="-1">1</span>
+                            <span class="rnc-number rnc-red" data-value="-2">2</span>
+                            <span class="rnc-number rnc-red" data-value="-3">3</span>
+                            <span class="rnc-number rnc-red" data-value="-4">4</span>
+                            <span class="rnc-number rnc-red" data-value="-5">5</span>
+                            <span class="rnc-number rnc-red" data-value="-6">6</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="selectedRNCValue" value="0">
+                </div>
+            </div>
+
+            <div class="status-display section">
+                 <h2><span id="dynamicSlaGroupRefStatusH2" class="sla-group-term">SLA Group</span> Action Selection <span class="h2-subtitle">(Click 1st Valid/Applicable)</span></h2>
+
+                  <div id="slaActionSection" style="display: none;">
+                       <div id="priorityList">
+                           <div>(Setup Groups & Calculate Status First)</div>
+                       </div>
+                  </div>
+
+                  <div id="discardActionSection" style="display: none;">
+                      <h3>Discard Actions <span id="discardActionsRemainingDisplay">(X Remaining)</span>:</h3>
+                      <div id="discardPriorityList">
+                           <div>(Loading discard options...)</div>
+                      </div>
+                  </div>
+                   <button id="doneActionsButton" class="action-done-button" style="display: none;">Click If All SLA Groups Have Taken an Action</button>
+             </div>
+        </div>
+    </div>
+
+    <div id="setupContent" class="tab-content">
+         <p class="setup-optional-note">Using this for group composition is optional: If using, Player should setup their units first.</p>
+         <div class="container">
+            <div class="settings-section section">
+                <h2>Scenario Setup</h2>
+                <div class="setup-grid">
+                    <label for="scenarioSelectSetup">Scenario:</label>
+                    <select id="scenarioSelectSetup">
+                        <option value="">Loading Scenarios...</option>
+                    </select>
+
+                    <label for="nationalitySelectSetup">SLA Nationality:</label>
+                    <select id="nationalitySelectSetup">
+                         <option value="">Loading Nationalities...</option>
+                    </select>
+
+                    <label for="stanceSelect">SLA Stance:</label>
+                    <select id="stanceSelect">
+                        <option value="">-- Select Scenario & Nation --</option>
+                    </select>
+                </div>
+                 <button id="generateButton">
+                     Generate Groups
+                     <div class="loader" id="loadingSpinner"></div>
+                 </button>
+                 <div id="errorDisplay"></div>
+            </div>
+
+            <div class="results-section section">
+                <h2>Generated SLA Groups</h2>
+                <div id="resultsDisplay">
+                    <p>Select scenario options and click "Generate Groups".</p>
+                </div>
+            </div>
+         </div>
+    </div>
+
+    <div id="utilContent" class="tab-content">
+        <div class="container">
+            <div class="section util-section">
+                <h2>Relative Range Calculator</h2>
+                <p class="util-description">Click the value (-3 to +8) for the Range chit associated with <em>each group's</em> location to find the relative range between them.</p>
+
+                <div class="util-range-input-area">
+                    <div class="range-input-group">
+                        <label>Range Chit for Group 1:</label>
+                        <div class="range-buttons-container" id="range-buttons-group1">
+                            <span class="range-number-button" data-group="1" data-value="-3">-3</span>
+                            <span class="range-number-button" data-group="1" data-value="-2">-2</span>
+                            <span class="range-number-button" data-group="1" data-value="-1">-1</span>
+                            <span class="range-number-button" data-group="1" data-value="0">0</span>
+                            <span class="range-number-button" data-group="1" data-value="1">1</span>
+                            <span class="range-number-button" data-group="1" data-value="2">2</span>
+                            <span class="range-number-button" data-group="1" data-value="3">3</span>
+                            <span class="range-number-button" data-group="1" data-value="4">4</span>
+                            <span class="range-number-button" data-group="1" data-value="5">5</span>
+                            <span class="range-number-button" data-group="1" data-value="6">6</span>
+                            <span class="range-number-button" data-group="1" data-value="7">7</span>
+                            <span class="range-number-button" data-group="1" data-value="8">8</span>
+                        </div>
+                    </div>
+
+                    <div class="range-input-group">
+                        <label>Range Chit for Group 2:</label>
+                        <div class="range-buttons-container" id="range-buttons-group2">
+                            <span class="range-number-button" data-group="2" data-value="-3">-3</span>
+                            <span class="range-number-button" data-group="2" data-value="-2">-2</span>
+                            <span class="range-number-button" data-group="2" data-value="-1">-1</span>
+                             <span class="range-number-button" data-group="2" data-value="0">0</span>
+                            <span class="range-number-button" data-group="2" data-value="1">1</span>
+                            <span class="range-number-button" data-group="2" data-value="2">2</span>
+                            <span class="range-number-button" data-group="2" data-value="3">3</span>
+                            <span class="range-number-button" data-group="2" data-value="4">4</span>
+                            <span class="range-number-button" data-group="2" data-value="5">5</span>
+                            <span class="range-number-button" data-group="2" data-value="6">6</span>
+                            <span class="range-number-button" data-group="2" data-value="7">7</span>
+                            <span class="range-number-button" data-group="2" data-value="8">8</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="relativeRangeResult" class="util-result" style="display: none;">
+                </div>
+                 <p class="util-explanation" style="display: none;">
+                 </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include the logic scripts AFTER data files and global data object -->
+
+    <script src="loader.js"></script>
+    <script src="setup.js"></script>      <!-- Group setup logic (uses loaded data) -->
+    <script src="game_data.js"></script>  <!-- During game data -->
+    <script src="game_logic.js"></script> <!-- During game logic (uses loaded data) -->
+    <script src="util.js"></script>       <!-- Game utilities -->
+    <script src="main.js"></script>       <!-- Tab switching logic & general UI -->
+
+</body>
+</html>
