@@ -491,11 +491,12 @@ hr {
     padding: 5px;
     border-radius: 4px;
     background-color: #fff;
-    display: inline-block;
+    display: block; /* Allow block to take width and rows to wrap */
 }
 .rnc-row {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap; /* Allow numbers to wrap to the next line */
     margin-bottom: 3px;
 }
 .rnc-row:last-child {
@@ -697,6 +698,12 @@ hr {
         width: auto; /* Let it shrink on smaller screens if needed */
         align-self: stretch; /* Still try to stretch within container */
      }
+    .rnc-number {
+        padding: 10px 12px;
+        font-size: 1.1em;
+        min-width: 40px;
+        margin: 0 2px;
+    }
 }
 
 @media (max-width: 480px) {
