@@ -1,26 +1,30 @@
-# Up Front SLA (Squad Leader Automa) Web Applet
+# Up Front SLA (Squad Leader Automa) Web App
 
 ![SLA Logo Placeholder](YOUR_APP_LOGO_OR_A_GENERIC_UP_FRONT_IMAGE.png)
 
-Welcome to the Up Front - Squad Leader Automa (SLA) web applet! This tool is designed to help solo players manage the AI opponent (SLA) in the board game "Up Front," automating many of the decision-making processes for an opponent.
+Welcome to the Up Front - Squad Leader Automa (SLA) web app! This tool is to help solitaire players of Up Front by supplying an AI opponent (SLA), automating many of the decision-making processes for an opponent.
 
 ## 🚀 Features
 
-*   **Action Determination:** Guides you through SLA activation, status calculation, and action selection based on the game's automa rules.
-*   **Dynamic Priority Lists:** Shows applicable actions for the SLA group based on its current state (Effective/Stressed) and the drawn RNC value.
+*   **Action Determination:** Guides you through group activation, status, and action selection.
+*   **Dynamic Priority Lists:** Shows applicable actions for the group based on its current state (Effective/Stressed) and the drawn RNC value.
 *   **Discard Phase Management:** Helps track and select discard actions.
 *   **Group Setup:** Optionally generate opponent group composition.
 *   **Game Utilities:** Includes tools like a Relative Range Calculator.
-*   **Data-Driven:** Loads specific nationality and scenario data.
+*   **Data-Driven:** Includes nationality and scenario data.
 
 ## 🛠️ Getting Started
 
-1.  **Open the App:** Simply double click the `index.html` file in a web browser (Chrome, Firefox, Edge, Safari). JavaScript must be enabled.
+1.  **Running the App:** Double click the `index.html` file in a web browser (Chrome, Firefox, Edge, Safari). JavaScript must be enabled.
 2.  **Data Loading:** The app will automatically load necessary game data files.
+
+## 📖 Terms
+
+SLA Group: A group of personality cards controlled by a the automa.
 
 ## 📖 How to Use
 
-The applet is divided into three main tabs: **Group Setup**, **Game Actions**, and **Game Util**.
+The app is divided into three main tabs: **Group Setup**, **Game Actions**, and **Game Util**.
 
 ### 1. Group Setup Tab (Optional)
 
@@ -31,8 +35,8 @@ If you do manually setup groups, be sure to select a nationality on the "Game Ac
     1.  Choose the **Scenario** you are playing from the dropdown.
     2.  Select the **SLA Nationality** from the dropdown. This will also populate the Nationality on the "Game Actions" tab.
     3.  The **SLA Stance** dropdown will populate with available stances (Attacker/Defender) for the selected Nationality in that Scenario. Choose the appropriate one.
-*   Click the **"Generate Groups"** button.
-*   ** The "Generated SLA Groups" section will display the units assigned to each SLA group (A, B, C, D).
+*   Click the **Generate Groups** button.
+*   The **Generated SLA Groups** section will display the units assigned to each SLA group (A, B, C, D).
 
     ![Scenario Selection Screenshot](img/SCREENSHOT_SETUP_TAB_FILLED_AND_RESULTS.png)
 
@@ -124,7 +128,7 @@ This tab provides utilities for playing the game (currently only a relative rang
 
 ## 💡 Tips
 
-*   **Follow Game Rules:** This applet automates SLA decisions but assumes you are following all other "Up Front" game rules regarding movement, combat, card play, etc.
+*   **Follow Game Rules:** This app automates SLA decisions but assumes you are following all other "Up Front" game rules regarding movement, combat, card play, etc.
 *   **SLA Rules:** The SLA does play slightly differently than the player in that it gets a fresh set of hand cards each turn and discards are slightly different.
 *   **Leftmost Card:** Always remember the importance of the leftmost SLA card for RPN (group activation) and RNC (action determination).
 *   **Player Discretion:** If anything is ambiguous or isn't handled by this app, use an RNC to decide between options.
