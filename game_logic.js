@@ -1225,54 +1225,87 @@ function handleDoneActions() {
      }
 }
 
-function handleConcealCheck() {
-    if (!requireNationalitySelected()) return;
+function handleConcealCheck()
+{
+    if (!requireNationalitySelected())
+        return;
 
-    const selectedNatName = slaNationalitySelect.value;
-    if (!selectedNatName || !window.concealmentCardData || !window.loadedNationalityData || !window.loadedNationalityData[selectedNatName] || typeof window.totalDeckSize === 'undefined' || window.totalDeckSize <= 0) {
+    const _selectedNatName = slaNationalitySelect.value;
+
+    if (!_selectedNatName ||
+        !window.concealmentCardData ||
+        !window.loadedNationalityData ||
+        !window.loadedNationalityData[_selectedNatName] ||
+        typeof window.totalDeckSize === 'undefined' ||
+        window.totalDeckSize <= 0)
+    {
         concealResult.innerHTML = `<strong>Error:</strong> Cannot check concealment. Nationality data, concealment data, or total deck size missing/invalid.`;
         concealResult.className = 'instruction result-output status-stressed-severe';
-        console.error("Concealment check failed: Missing global data", {selectedNatName, concealmentCardData: window.concealmentCardData, loadedNationalityData: window.loadedNationalityData, totalDeckSize: window.totalDeckSize});
+        console.error("Concealment check failed: Missing global data. Details:", {
+            selectedNatName: _selectedNatName,
+            isNatNameFalsy: !_selectedNatName,
+            concealmentCardDataExists: !!window.concealmentCardData,
+            isConcealmentDataFalsy: !window.concealmentCardData,
+            loadedNationalityDataExists: !!window.loadedNationalityData,
+            isLoadedNatDataFalsy: !window.loadedNationalityData,
+            specificNationDataExists: (_selectedNatName && window.loadedNationalityData) ? !!window.loadedNationalityData[_selectedNatName] : 'N/A',
+            isSpecificNationDataFalsy: (_selectedNatName && window.loadedNationalityData) ? !window.loadedNationalityData[_selectedNatName] : 'N/A',
+            totalDeckSize: window.totalDeckSize,
+            isTotalDeckSizeUndefined: typeof window.totalDeckSize === 'undefined',
+            isTotalDeckSizeInvalid: (typeof window.totalDeckSize === 'number' ? window.totalDeckSize <= 0 : 'N/A')
+        });
         return;
     }
 
-    const nationConcealmentCards = window.concealmentCardData.filter(card =>
-        Array.isArray(card.usableBy) && card.usableBy.includes(window.loadedNationalityData[selectedNatName].nation_id || selectedNatName)
+    const _nationConcealmentCards = window.concealmentCardData.filter(_card =>
+        Array.isArray(_card.usableBy) && _card.usableBy.includes(window.loadedNationalityData[_selectedNatName].nation_id || _selectedNatName)
     );
 
-    const totalApplicableCount = nationConcealmentCards.reduce((sum, card) => sum + card.count, 0);
+    const _totalApplicableCount = _nationConcealmentCards.reduce((_sum, _card) => _sum + _card.count, 0);
+    const _probabilityOfAnyConcealment = _totalApplicableCount / window.totalDeckSize;
+    const _draw = Math.random(); // 0.0 to 1.0
 
-    const probabilityOfAnyConcealment = totalApplicableCount / window.totalDeckSize;
-    const draw = Math.random(); // 0.0 to 1.0
-
-    if (totalApplicableCount === 0 || draw > probabilityOfAnyConcealment) {
+    if (_totalApplicableCount === 0 || _draw > _probabilityOfAnyConcealment)
+    {
         concealResult.innerHTML = `<strong>Result:</strong> No Concealment card drawn for current ${"SLA Group"}.`;
         concealResult.className = 'instruction result-output status-stressed-mild';
-    } else {
-        let drawnCardValue = null;
-        let cumulativeWeight = 0;
-        for(const card of nationConcealmentCards) {
-            cumulativeWeight += card.count;
-        }
+    }
+    else
+    {
+        let _drawnCard = null;
+        // To correctly simulate drawing a specific card from the applicable ones:
+        // We scale the random draw to the sum of counts of applicable cards.
+        // The original _draw is a value from 0 to P(any concealment).
+        // We want to find which card this _draw corresponds to within the subset of applicable cards.
+        let _scaledDrawValue = _draw * window.totalDeckSize; // This gives a value from 0 to totalApplicableCount (approximately)
 
-        let randomPointInWeightedRange = draw * cumulativeWeight; // Scale random 0-1 to 0-cumulativeWeight
-        let currentCumulative = 0;
-
-        for (const card of nationConcealmentCards) {
-            currentCumulative += card.count;
-            if (randomPointInWeightedRange <= currentCumulative) {
-                drawnCardValue = card.value;
+        for (const _card of _nationConcealmentCards)
+        {
+            _scaledDrawValue -= _card.count;
+            if (_scaledDrawValue <= 0)
+            {
+                _drawnCard = _card;
                 break;
             }
         }
 
-        if (drawnCardValue !== null) {
-            concealResult.innerHTML = `<strong>Result:</strong> ${"SLA Group"} draws <strong>Concealment (${drawnCardValue})</strong>.`;
-            concealResult.className = 'instruction result-output status-effective-good';
-        } else {
-             concealResult.innerHTML = `<strong>Result:</strong> No Concealment card drawn for current ${"SLA Group"} (calculation error?).`;
-             concealResult.className = 'instruction result-output status-stressed-mild';
-             console.error("Concealment draw calculation error", {draw, probabilityOfAnyConcealment, totalApplicableCount, randomPointInWeightedRange, nationConcealmentCards});
+        if (_drawnCard)
+        {
+            concealResult.innerHTML = `<strong>Result:</strong> Concealment card <strong>${_drawnCard.id} (Value: ${_drawnCard.value})</strong> drawn for current ${"SLA Group"}!`;
+            concealResult.className = 'instruction result-output status-good';
+        }
+        else
+        {
+            // This case should ideally not be reached if _totalApplicableCount > 0 and _draw <= _probabilityOfAnyConcealment
+            concealResult.innerHTML = `<strong>Result:</strong> No Concealment card drawn (edge case). Probability: ${_probabilityOfAnyConcealment.toFixed(4)}, Draw: ${_draw.toFixed(4)}`;
+            concealResult.className = 'instruction result-output status-stressed-moderate';
+            console.warn("Concealment draw logic reached an unexpected state.", {
+                totalApplicableCount: _totalApplicableCount,
+                probabilityOfAnyConcealment: _probabilityOfAnyConcealment,
+                draw: _draw,
+                scaledDrawAttempt: _draw * window.totalDeckSize,
+                nationConcealmentCards: _nationConcealmentCards
+            });
         }
     }
 
