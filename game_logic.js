@@ -6,6 +6,13 @@ let slaGroupState = {
     currentPhase: 'main' // 'main', 'discard', 'done'
 };
 
+let activeScenarioFeatures = {
+    HAS_VICTORY_LOCATION: false,
+    LOCATION_CONTEXT: null,
+    HAS_VICTORY_POINTS: false,
+    VICTORY_POINTS_CONTEXT: null,
+};
+
 let pinnedCountInput, slPinnedKIAInput, inWireInput, isFlankedInput, isMovingInput, isFlankingInput;
 let isEncircledInput, isEntrenchedInput;
 let terrainTypeSelect;
@@ -333,7 +340,46 @@ const conditionCheckers = {
         return !nonEntrenchingTerrains.includes(currentTerrain);
     },
     "IS_JAPANESE": (inputs, stance, nationality) => nationality === NATIONS.JAPANESE,
+    "HAS_VICTORY_LOCATION": () => activeScenarioFeatures.HAS_VICTORY_LOCATION,
+    "HAS_VICTORY_POINTS": () => activeScenarioFeatures.HAS_VICTORY_POINTS,
 };
+
+function processActiveScenarioVictoryConditions(scenarioName) {
+    activeScenarioFeatures.HAS_VICTORY_LOCATION = false;
+    activeScenarioFeatures.LOCATION_CONTEXT = null;
+    activeScenarioFeatures.HAS_VICTORY_POINTS = false;
+    activeScenarioFeatures.VICTORY_POINTS_CONTEXT = null;
+
+    if (!scenarioName || !window.loadedScenarioData || !window.loadedScenarioData[scenarioName]) {
+        console.warn(`processActiveScenarioVictoryConditions: Scenario data not found for "${scenarioName}". Victory conditions will be false.`);
+        return;
+    }
+
+    const _scenarioData = window.loadedScenarioData[scenarioName];
+
+    if (_scenarioData.victory_conditions && Array.isArray(_scenarioData.victory_conditions)) {
+        _scenarioData.victory_conditions.forEach(conditionObj => {
+            if (typeof conditionObj === 'object' && conditionObj !== null) {
+                for (const type in conditionObj) {
+                    const _context = conditionObj[type];
+                    switch (type.toUpperCase()) {
+                        case "LOCATION":
+                            activeScenarioFeatures.HAS_VICTORY_LOCATION = true;
+                            activeScenarioFeatures.LOCATION_CONTEXT = _context;
+                            break;
+                        case "VICTORY_POINTS":
+                            activeScenarioFeatures.HAS_VICTORY_POINTS = true;
+                            activeScenarioFeatures.VICTORY_POINTS_CONTEXT = _context;
+                            break;
+                        default:
+                            console.warn(`processActiveScenarioVictoryConditions: Unknown victory condition type "${type}" in scenario "${scenarioName}".`);
+                    }
+                }
+            }
+        });
+    }
+    console.log(`Processed victory conditions for "${scenarioName}":`, activeScenarioFeatures);
+}
 
 function computeActionWeight(action, rncValue, rncIsRed, stance) {
     let w = 0;
@@ -408,6 +454,16 @@ function updateSLAState() {
         slaGroupState.discardsTaken = 0;
         slaGroupState.currentPhase = 'main';
         return;
+    }
+
+    const gameScenarioSelectElement = document.getElementById('scenarioSelectSetup');
+    const currentActiveScenarioName = gameScenarioSelectElement ? gameScenarioSelectElement.value : null;
+
+    if (currentActiveScenarioName) {
+        processActiveScenarioVictoryConditions(currentActiveScenarioName);
+    } else {
+        processActiveScenarioVictoryConditions(null);
+        console.warn("updateSLAState: No active game scenario identified. Victory condition checks might be inaccurate.");
     }
 
     const coreElements = [slaTroopQualitySelect, selectedRNCValueInput, statusDisplay, priorityList, slaActionSection, rncSelector];

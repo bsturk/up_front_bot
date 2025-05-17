@@ -85,6 +85,8 @@ const CONDITIONS = {
     "SITUATIONAL_PLAYER_JUDGEMENT": "Situational (Player judgement)",
     "WEAPON_MALFUNCTIONED_ANY": "Any current Group weapon malfunctioned",
     "IS_JAPANESE": "Nationality is Japanese",
+    "HAS_VICTORY_LOCATION": "Victory condition(s) involve a 'Location'",
+    "HAS_VICTORY_POINTS": "Victory condition(s) require Victory Points",
 };
 
 const TARGET_CRITERIA = {
@@ -382,7 +384,7 @@ const ACTION_DEFINITIONS = {
     },
     MOVE_OBJECTIVE: {
         text: ACTIONS.MOVE_OBJECTIVE.text, type: ACTIONS.MOVE_OBJECTIVE.type,
-        conditions: ["HAS_MOVE_CARD", "IS_NOT_MOVING", "!PINNED_ANY"],
+        conditions: ["HAS_MOVE_CARD", "IS_NOT_MOVING", "!PINNED_ANY", "HAS_VICTORY_LOCATION"],
         targetingKey: "MOVE_DIR_OBJECTIVE",
         instructionKey: "MOVE_PLAYER_CHOICE_OBJECTIVE",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",
