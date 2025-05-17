@@ -12,9 +12,7 @@ window.tutorialData = {
     "WIRE",
     "SMOKE"
   ],
-  "victory_condition": "LEAST_ELIMINATED",
-  "victory_condition_context_num": -1,
-  "victory_condition_context_rr": -1,
+  "victory_conditions": [ { "ELIMINATE": -1 } ],
   "germany_cards_attacker": [
     1,
     2,

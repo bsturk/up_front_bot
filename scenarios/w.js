@@ -8,9 +8,7 @@ window.wData = {
   ],
   "remove_when_used": null,
   "discard_when_drawn": null, // Setup instruction, not ongoing discard
-  "victory_condition": "OCCUPY_EQUAL_OR_MORE_BUILDINGS_IMMEDIATE",
-  "victory_condition_context_num": null,
-  "victory_condition_context_rr": null,
+  "victory_conditions": [ { "LOCATION": null } ],
   // Using the primary lists shown at the top unless specified otherwise
   "germany_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
   "america_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ], // Base list

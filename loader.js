@@ -66,7 +66,6 @@ function aggregateLoadedData() {
         }
     });
 
-    console.log("Aggregation complete.");
     console.log("Loaded Nationalities:", window.loadedNationalityData);
     console.log("Loaded Scenarios:", window.loadedScenarioData);
 

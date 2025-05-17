@@ -8,9 +8,7 @@ window.vData = {
   ],
   "remove_when_used": null,
   "discard_when_drawn": null,
-  "victory_condition": "BREAK_DEFENDING_SQUAD",
-  "victory_condition_context_num": null,
-  "victory_condition_context_rr": null,
+  "victory_conditions": [ { "ELIMINATE": null } ],
   // Note: Attacker America has conditional lists (vs German / vs Others). Using "vs Others" as default.
   "america_cards_attacker": [ 3, 4, 5, 6, 7, 8, 11, 12, 13, 16, 17, 18, 19, 20, 44 ],
   "britian_cards_attacker": [ 1, 2, 3, 4, 5, 6, 14, 15, 16, 17, 20, 24 ],
