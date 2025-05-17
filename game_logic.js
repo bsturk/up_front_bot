@@ -14,7 +14,7 @@ let activeScenarioFeatures = {
 };
 
 let pinnedCountInput, slPinnedKIAInput, inWireInput, isFlankedInput, isMovingInput, isFlankingInput;
-let isEncircledInput, isEntrenchedInput;
+let isEncircledInput, isEntrenchedInput, isInfiltratedInput;
 let terrainTypeSelect;
 let slaTroopQualitySelect, slaNationalitySelect, stanceSelect, statusDisplay, priorityList;
 let checkConcealButton, concealResult;
@@ -67,6 +67,7 @@ function calculateStability() {
     if (isFlankedInput?.checked) stability -= 2;
     if (isMovingInput?.checked) stability -= 1;
     if (isEncircledInput?.checked) stability -= 3;
+    if (isInfiltratedInput?.checked) stability -= 3; // Same penalty as encircled
 
     if (isFlankingInput?.checked) stability += 2;
     if (isEntrenchedInput?.checked) stability += 2;
@@ -493,7 +494,7 @@ function updateSLAState() {
     const currentStateInputs = {
         pinnedCountInput, slPinnedKIAInput, inWireInput, isFlankedInput,
         isMovingInput, isFlankingInput, terrainTypeSelect, isEncircledInput,
-        isEntrenchedInput
+        isEntrenchedInput, isInfiltratedInput
     };
 
     let statusText = isStressed ? "Stressed" : "Effective";
@@ -1479,6 +1480,7 @@ function initializeGameLogic() {
     terrainTypeSelect = document.getElementById('terrainType'); // Added
     isEncircledInput = document.getElementById('isEncircled');
     isEntrenchedInput = document.getElementById('isEntrenched');
+    isInfiltratedInput = document.getElementById('isInfiltrated');
     slaTroopQualitySelect = document.getElementById('slaTroopQuality');
     slaNationalitySelect = document.getElementById('slaNationality');
     stanceSelect = document.getElementById('stanceSelect');
@@ -1578,7 +1580,7 @@ function initializeGameLogic() {
 
     const stateChangeInputs = [
         pinnedCountInput, slaTroopQualitySelect, slPinnedKIAInput, inWireInput, isFlankedInput,
-        isMovingInput, isFlankingInput, isEncircledInput, isEntrenchedInput, terrainTypeSelect, stanceSelect
+        isMovingInput, isFlankingInput, isEncircledInput, isEntrenchedInput, isInfiltratedInput, terrainTypeSelect, stanceSelect
     ];
 
     stateChangeInputs.forEach(input => {
