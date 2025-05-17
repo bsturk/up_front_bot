@@ -68,6 +68,7 @@ const CONDITIONS = {
     "IN_WIRE": "In Wire",
     "IS_ENCIRCLED": "Is Encircled",
     "IS_ENTRENCHED": "Is Entrenched",
+    "IS_INFILTRATED": "Is Infiltrated",
     "IS_NOT_ENTRENCHED": "Is not Entrenched",
     "IS_MOVING": "Is Moving",
     "IS_NOT_MOVING": "Not Moving",
@@ -384,7 +385,7 @@ const ACTION_DEFINITIONS = {
     },
     MOVE_OBJECTIVE: {
         text: ACTIONS.MOVE_OBJECTIVE.text, type: ACTIONS.MOVE_OBJECTIVE.type,
-        conditions: ["HAS_MOVE_CARD", "IS_NOT_MOVING", "!PINNED_ANY", "HAS_VICTORY_LOCATION"],
+        conditions: ["HAS_MOVE_CARD", "IS_NOT_MOVING", "!PINNED_ANY", "HAS_VICTORY_LOCATION", "!IS_INFILTRATED"],
         targetingKey: "MOVE_DIR_OBJECTIVE",
         instructionKey: "MOVE_PLAYER_CHOICE_OBJECTIVE",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",

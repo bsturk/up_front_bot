@@ -302,6 +302,7 @@ const conditionCheckers = {
     "IN_WIRE": (inputs) => inputs.inWireInput?.checked ?? false,
     "IN_MINEFIELD": (inputs) => inputs.terrainTypeSelect?.value === 'Minefield',
     "IS_ENTRENCHED": (inputs) => inputs.isEntrenchedInput?.checked ?? false,
+    "IS_INFILTRATED": (inputs) => inputs.isInfiltratedInput?.checked ?? false,
     "IS_NOT_ENTRENCHED": (inputs) => !(inputs.isEntrenchedInput?.checked ?? false),
     "IS_MOVING": (inputs) => inputs.isMovingInput?.checked ?? false,
     "IS_NOT_MOVING": (inputs) => !(inputs.isMovingInput?.checked ?? false),
@@ -1507,7 +1508,7 @@ function initializeGameLogic() {
 
     const essentialElements = [
         pinnedCountInput, slPinnedKIAInput, inWireInput, isFlankedInput, isMovingInput, isFlankingInput,
-        terrainTypeSelect, isEncircledInput, isEntrenchedInput,
+        terrainTypeSelect, isEncircledInput, isEntrenchedInput, isInfiltratedInput,
         slaTroopQualitySelect, slaNationalitySelect, statusDisplay, priorityList, checkConcealButton,
         concealResult, slaActionSection, rncSelector, selectedRNCValueInput, terrainPlacedSelect,
         checkTerrainAcceptanceButton, terrainPlacementResult, slaHandSizeDisplay, slaNationalityNotes,
