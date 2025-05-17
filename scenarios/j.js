@@ -1,16 +1,15 @@
 window.jData = {
   "name": "J. FREE FOR ALL",
-  "num_decks": "VARIABLE_PLAYERS_PLUS_1", // Rule specifies # of players + 1
-  "first_player": "PLAYER_ORDER", // "Set Up and Move in order shown at right."
+  "num_decks": "VARIABLE_PLAYERS_PLUS_1",
+  "first_player": "PLAYER_ORDER",
   "treated_as_cower_cards": [
     "PILLBOX"
   ],
   "remove_when_used": null,
   "discard_when_drawn": null,
-  "victory_condition": "CONTROL_PERSONALITIES_LOCATION", // Primary condition, VP as backup
+  "victory_condition": "CONTROL_PERSONALITIES_LOCATION",
   "victory_condition_context_num": 4,
   "victory_condition_context_rr": 4,
-  // All players draw from the same pool type, attacker/defender distinction N/A
   "germany_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
   "america_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
   "russia_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ],

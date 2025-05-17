@@ -2,9 +2,9 @@ window.oData = {
   "name": "O. ASSAULTING A PILLBOX",
   "num_decks": 2,
   "first_player": "Attacker",
-  "treated_as_cower_cards": [], // Conditional cower rules (O.3) not listed here
+  "treated_as_cower_cards": [],
   "remove_when_used": null,
-  "discard_when_drawn": null, // Explicitly states "No cards are removed"
+  "discard_when_drawn": null,
   "victory_condition": "ELIMINATE_PILLBOX_OCCUPANTS_OR_VACATE",
   "victory_condition_context_num": null,
   "victory_condition_context_rr": null,
@@ -20,7 +20,6 @@ window.oData = {
   "america_cards_defender": [ 5, 7, 8, 9, 15, 42, 43 ], // This is the defender list when US is attacked by US (per top block)
   "russia_cards_defender": null,
   "japan_cards_defender": [ 4, 5, 6, 7, 8, 9, 10, 11, 12, 16, 20, 21, 25 ], // This is the defender list when Japan is attacked by US
-  // Note: A different list exists for Japan attacked by Britain: [ 4, 5, 6, 7, 8, 9, 10, 11, 16, 21, 25 ]
   "britian_cards_defender": [ 2, 4, 5, 6, 7, 8, 13, 21 ], // This is the defender list when Britain is attacked by Britain (per top block)
   "france_cards_defender": null,
   "italy_cards_defender": null,

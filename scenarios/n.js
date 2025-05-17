@@ -7,7 +7,7 @@ window.nData = {
     "MINEFIELD"
   ],
   "remove_when_used": null,
-  "discard_when_drawn": null, // Explicitly states "No cards are removed"
+  "discard_when_drawn": null,
   "victory_condition": "MOST_VICTORY_POINTS_TIME_LIMIT_JUNGLE",
   "victory_condition_context_num": null,
   "victory_condition_context_rr": null,
@@ -27,5 +27,4 @@ window.nData = {
   "france_cards_defender": null,
   "italy_cards_defender": null,
   "finland_cards_defender": null
-  // Note: Alternate Setups vs. Japanese are not included in this base definition.
 };

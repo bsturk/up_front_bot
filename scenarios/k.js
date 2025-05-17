@@ -8,9 +8,9 @@ window.kData = {
   ],
   "remove_when_used": null,
   "discard_when_drawn": null,
-  "victory_condition": "WIN_BOTH_SEGMENTS_CONTROL_PERSONALITIES_LOCATION", // Custom string for the two-segment win condition
-  "victory_condition_context_num": 4, // Per segment
-  "victory_condition_context_rr": 4,  // Per segment
+  "victory_condition": "WIN_BOTH_SEGMENTS_CONTROL_PERSONALITIES_LOCATION",
+  "victory_condition_context_num": 4,
+  "victory_condition_context_rr": 4,
   "germany_cards_attacker": [ 1, 2, 3, 4, 5, 10, 15, 19, 26, 27 ],
   "america_cards_attacker": [ 3, 4, 5, 7, 8, 9, 11, 12, 17, 18, 20, 21 ],
   "russia_cards_attacker": [ 2, 3, 4, 5, 6, 7, 8, 12, 13, 20, 22, 23, 24, 25, 26 ],

@@ -320,6 +320,7 @@ const conditionCheckers = {
     "NEEDS_CREW_OR_CREW_PINNED": () => true,
     "OBJECTIVE_IN_RANGE": () => true,
     "SITUATIONAL_PLAYER_JUDGEMENT": () => true,
+    "WAS_TARGETED_BY_SNIPER_LAST_TURN": () => true,
     "WEAPON_MALFUNCTIONED_ANY": () => true,
     "WEAPON_MALFUNCTIONED_PRIMARY": () => true,
     "IS_ATTACKER": (inputs, stance) => stance === "attacker" || stance === "Default",

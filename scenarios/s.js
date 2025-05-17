@@ -7,7 +7,7 @@ window.sData = {
     "MINEFIELD"
   ],
   "remove_when_used": null,
-  "discard_when_drawn": null, // Explicitly states "No cards are removed"
+  "discard_when_drawn": null,
   "victory_condition": "CONTROL_PERSONALITIES_LOCATION_IMMEDIATE",
   "victory_condition_context_num": 4,
   "victory_condition_context_rr": 5,

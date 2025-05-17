@@ -8,21 +8,21 @@ window.pData = {
   ],
   "remove_when_used": null,
   "discard_when_drawn": null,
-  "victory_condition": "CONTROL_PERSONALITIES_LOCATION_ANYTIME_OR_DEFENDER_SPECIAL", // Combined description
-  "victory_condition_context_num": 4, // For attacker win part
-  "victory_condition_context_rr": 5,  // For attacker win part
+  "victory_condition": "CONTROL_PERSONALITIES_LOCATION_ANYTIME_OR_DEFENDER_SPECIAL",
+  "victory_condition_context_num": 4,
+  "victory_condition_context_rr": 5,
   "germany_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
-  "america_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ], // Base list
+  "america_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
   "russia_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ],
-  "japan_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ], // Base list
+  "japan_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ],
   "britian_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
   "france_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
   "italy_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 ],
   "finland_cards_attacker": null,
   "germany_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
-  "america_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ], // Base list
+  "america_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
   "russia_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ],
-  "japan_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ], // Base list
+  "japan_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ],
   "britian_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
   "france_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
   "italy_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 ],

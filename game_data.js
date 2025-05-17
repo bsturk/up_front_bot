@@ -49,10 +49,12 @@ const ACTIONS = {
     RALLY_NUM:             { text: "Rally #",                   type: "Rally" },
     REMOVE_WIRE:           { text: "Remove Wire",               type: "Terrain" },
     TRANSFER_IND:          { text: "Individual Transfer",       type: "Misc" },
+    COUNTER_SNIPER:        { text: "Counter-Sniper",            type: "Misc" },
 };
 
 const CONDITIONS = {
     "ALWAYS_TRUE": "Default action if other conditions not met",
+    "WAS_TARGETED_BY_SNIPER_LAST_TURN": "Targeted by enemy sniper last turn",
     "HAS_FIRE_CARD": "Fire card(s) available",
     "HAS_MOVE_CARD": "Movement card available",
     "HAS_FLANK_CARD": "Movement with Flank card available",
@@ -279,6 +281,7 @@ const INSTRUCTIONS = {
     TRANSFER_PLAY_MOVE_DISCARD: "Play Movement card to Discard.",
     DISCARD_CARD_DRAW_ONE: "Discard 1 card of the specified type from the SLA hand.",
     DISCARD_NO_ACTION: "Choose not to take a Discard Action.",
+    ATTEMPT_COUNTER_SNIPER_DRAW_RNC: "Draw RNC.",
 };
 
 const POST_ACTION_INSTRUCTIONS = {
@@ -301,6 +304,7 @@ const POST_ACTION_INSTRUCTIONS = {
     INFILTRATION_ATTEMPT_MORALE: "Take a morale check (pass if RNC < Morale, ignoring color). If successful, check RPN column under group size with modifiers. Success if number is red - place an Infiltration marker on target Player group.",
     INFILTRATION_ATTEMPT_MOVE: "Check RPN column under group size with modifiers. Success if number is red - place an Infiltration marker on target Player group.",
     END_DISCARD_PHASE: "The turn is over for the SLA player.",
+    RESOLVE_COUNTER_SNIPER_ATTEMPT: "If RNC black & > enemy sniper RNC, enemy sniper eliminated.",
 };
 
 const ACTION_DEFINITIONS = {
@@ -472,6 +476,14 @@ const ACTION_DEFINITIONS = {
         postActionInstructionKey: "BANZAI_POST",
         displayTriggerTextKeys: ["HAS_MOVE_CARD", "NOT_PINNED_LEADER"]
     },
+    COUNTER_SNIPER: {
+        text: ACTIONS.COUNTER_SNIPER.text, type: ACTIONS.COUNTER_SNIPER.type,
+        conditions: ["WAS_TARGETED_BY_SNIPER_LAST_TURN"],
+        targetingKey: "NONE",
+        instructionKey: "ATTEMPT_COUNTER_SNIPER_DRAW_RNC",
+        postActionInstructionKey: "RESOLVE_COUNTER_SNIPER_ATTEMPT",
+        displayTriggerTextKeys: ["WAS_TARGETED_BY_SNIPER_LAST_TURN"]
+    },
     HOLD: {
         text: ACTIONS.HOLD.text, type: ACTIONS.HOLD.type,
         conditions: ["ALWAYS_TRUE"],
@@ -568,13 +580,14 @@ const slaPriorities = {
             { actionRef: "INFILTRATE_MOVE",       rncCondition:   { red: "ANY" },                    priority: 0 },
             { actionRef: "INFILTRATE_MORALE",     rncCondition:   { black: "ANY" },                  priority: 0 },
             { actionRef: "MOVE_FLANK",            rncCondition:   { black: ["2...6"] },              priority: 0 },
-            { actionRef: "MOVE_ADVANCE",          rncCondition:   { black: "0...1", red: "ANY" },    priority: 0 },
+            { actionRef: "MOVE_ADVANCE",          rncCondition:   { black: ["0...1"], red: "ANY" },  priority: 0 },
             { actionRef: "LAY_SMOKE",             rncCondition:   { black: "ANY" },                  priority: 0 },
             { actionRef: "ENTRENCH",              rncCondition:   { red: "ANY" },                    priority: 0 },
             { actionRef: "FIX_WEAPON",            rncCondition:   {},                                priority: 0 },
             { actionRef: "ACQUIRE_WEAPON",        rncCondition:   {},                                priority: 0 },
             { actionRef: "CHANGE_CREW",           rncCondition:   {},                                priority: 0 },
             { actionRef: "TRANSFER_IND",          rncCondition:   {},                                priority: 0 },
+            { actionRef: "COUNTER_SNIPER",        rncCondition:   { black: "ANY" },                  priority: 0 },
             { actionRef: "PLACE_TERRAIN_SELF",    rncCondition:   {},                                priority: 0 },
             { actionRef: "HOLD",                  rncCondition:   {},                                priority: 0 }
         ],
@@ -586,8 +599,9 @@ const slaPriorities = {
             { actionRef: "RALLY_ALL",             rncCondition:   {},                                priority: 0 },
             { actionRef: "RALLY_NUM",             rncCondition:   {},                                priority: 0 },
             { actionRef: "PLACE_TERRAIN_SELF",    rncCondition:   {},                                priority: 0 },
-            { actionRef: "MOVE_CAUTIOUS",         rncCondition:   { black: "0...2" },                priority: 0 },
-            { actionRef: "MOVE_RETREAT",          rncCondition:   { black: "ANY", red: "0...1"},     priority: 0 },
+            { actionRef: "COUNTER_SNIPER",        rncCondition:   { red: "ANY" },                    priority: 0 },
+            { actionRef: "MOVE_CAUTIOUS",         rncCondition:   { black: ["0...2"] },              priority: 0 },
+            { actionRef: "MOVE_RETREAT",          rncCondition:   { black: "ANY", red: ["0...1"]},   priority: 0 },
             { actionRef: "MOVE_RETREAT_SIDEWAYS", rncCondition:   { red: ["2...6"] },                priority: 0 },
             { actionRef: "LAY_SMOKE",             rncCondition:   {},                                priority: 0 },
             { actionRef: "FIX_WEAPON",            rncCondition:   {},                                priority: 0 },
