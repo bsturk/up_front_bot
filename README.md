@@ -15,12 +15,11 @@ Welcome to the Up Front - Squad Leader Automa (SLA) web app! This tool is to hel
 
 ## 🛠️ Getting Started
 
-1.  **Running the App:** Double click the `index.html` file in a web browser (Chrome, Firefox, Edge, Safari). JavaScript must be enabled.
-2.  **Data Loading:** The app will automatically load necessary game data files.
+*   **Running the App:** Double click the `index.html` file in a web browser (Chrome, Firefox, Edge, Safari). JavaScript must be enabled.
 
 ## 🔑 Terms
 
-SLA Group: A group of personality cards controlled by a the automa.
+*   **SLA Group:** A group of personality cards controlled by the automa.
 
 ## 📖 How to Use
 
@@ -29,7 +28,7 @@ The app is divided into three main tabs: **Group Setup**, **Game Actions**, and 
 ### 1. Group Setup Tab (Optional)
 
 This tab helps you generate the initial SLA groups for a scenario. Using this is optional; you can manually set up SLA groups if you prefer.
-If you do manually setup groups, be sure to select a nationality on the "Game Actions" tab.
+If you manually setup groups, be sure to select a nationality on the "Game Actions" tab.
 
 *   **Scenario Selection:**
     1.  Choose the **Scenario** you are playing from the dropdown.
