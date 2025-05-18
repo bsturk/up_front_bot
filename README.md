@@ -2,7 +2,7 @@
 
 ![SLA Logo Placeholder](YOUR_APP_LOGO_OR_A_GENERIC_UP_FRONT_IMAGE.png)
 
-Welcome to the Up Front - Squad Leader Automa (SLA) web app! This tool is to help solitaire players of Up Front by providing an AI opponent, automating many of the decision-making processes of an opponent.
+Welcome to the Up Front - Squad Leader Automa (SLA) web app! This tool is to help solitaire players of Up Front by providing an AI opponent, automating much of the decision-making process.
 
 ## 🚀 Features
 
