@@ -552,7 +552,7 @@ const ACTION_DEFINITIONS = {
     },
     INFILTRATE_MORALE: {
         text: ACTIONS.INFILTRATE_MORALE.text, type: ACTIONS.INFILTRATE_MORALE.type,
-        conditions: ["IS_NOT_MOVING", "!PINNED_ANY", "!IN_MINEFIELD", "!IN_WIRE", "IS_ATTACKER"],
+        conditions: ["PLAYER_AT_RR_5", "IS_NOT_MOVING", "!PINNED_ANY", "!IN_MINEFIELD", "!IN_WIRE", "IS_ATTACKER"],
         targetingKey: "INFILTRATE",
         instructionKey: "DRAW_RNC",
         postActionInstructionKey: "INFILTRATION_ATTEMPT_MORALE",
