@@ -33,6 +33,7 @@ const ACTIONS = {
     FIRE_GEN:              { text: "Fire (General)",            type: "Fire" },
     FIRE_HIGH_OPP:         { text: "Fire (High Opportunity)",   type: "Fire" },
     FIRE_OPP:              { text: "Fire (Opportunity)",        type: "Fire" },
+    FIRE_INFILTRATE:       { text: "Fire (Infiltrate)",         type: "Fire" },
     FIX_WEAPON:            { text: "Fix Weapon",                type: "Misc" },
     HOLD:                  { text: "Hold / No Action",          type: "Hold" },
     INFILTRATE_MORALE:     { text: "Infiltrate (Morale Check)", type: "Move" },
@@ -69,6 +70,7 @@ const CONDITIONS = {
     "IS_ENCIRCLED": "Is Encircled",
     "IS_ENTRENCHED": "Is Entrenched",
     "IS_INFILTRATED": "Is Infiltrated",
+    "IS_INFILTRATING_ANY": "Is Infiltrating any Group",
     "IS_NOT_ENTRENCHED": "Is not Entrenched",
     "IS_MOVING": "Is Moving",
     "IS_NOT_MOVING": "Not Moving",
@@ -80,6 +82,7 @@ const CONDITIONS = {
     "OBJECTIVE_IN_RANGE": "Scenario has specific range for victory and an SLA group is 1 away",
     "PINNED_ANY": "> Any Pinned units in SLA",
     "PINNED_LEADER": "SL/ASL Pinned/KIA",
+    "SLA_NO_PINNED_UNITS": "SLA has no Pinned units",
     "PLAYER_AT_RR_5": "Any Player group at RR 5",
     "PLAYER_AT_RR_4_OR_5": "Any Player group at RR 4 or 5",
     "PLAYER_AT_RR_LT_5": "Any Player group at RR < 5",
@@ -94,6 +97,7 @@ const TARGET_CRITERIA = {
     IS_FLANKED_BY_SLA: { desc: "Flanked by this SLA Group" },
     IS_IN_OPEN: { desc: "In Open Ground" },
     IS_MOVING: { desc: "Moving" },
+    IS_INFILTRATED_BY_SLA: { desc: "Infiltrated by this SLA Group" },
     HAS_LEADER: { desc: "Has SL/ASL" },
     HAS_UNPINNED_LEADER: { desc: "Has Unpinned SL/ASL" },
     HAS_SPEC_WEAPON_MG: { desc: "Has MG" },
@@ -189,6 +193,10 @@ const TARGETING = {
         title: "Target Group Priority:",
         criteria: [ TARGET_CRITERIA.IS_FLANKED_BY_SLA, TARGET_CRITERIA.IS_MOVING, TARGET_CRITERIA.IS_IN_OPEN, TARGET_CRITERIA.HAS_LEADER, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.LOWEST_PINNED_COUNT, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
+    FIRE_EFF_INFILTRATE: {
+        title: "Target Group Priority:",
+        criteria: [ TARGET_CRITERIA.IS_INFILTRATED_BY_SLA, TARGET_CRITERIA.IS_IN_OPEN, TARGET_CRITERIA.IS_MOVING, TARGET_CRITERIA.HAS_LEADER, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.LOWEST_PINNED_COUNT, TARGET_CRITERIA.LOWEST_GROUP_ID ]
+    },
     FIRE_STD_STR_DEF: {
         title: "Target Group Priority:",
         criteria: [ TARGET_CRITERIA.AT_RR_X_OR_Y(4, 5), TARGET_CRITERIA.IS_MOVING, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.LOWEST_GROUP_ID ]
@@ -204,6 +212,10 @@ const TARGETING = {
     MOVE_DIR_RETREAT: {
         title: "Movement Direction:",
         description: { desc: ["Backward."] }
+    },
+    MOVE_DIR_SIDEWAYS: {
+        title: "Movement Direction:",
+        description: { desc: ["Sideays."] }
     },
     MOVE_DIR_FLANK_HIGHEST_THREAT: {
         title: "Movement Direction:",
@@ -264,7 +276,6 @@ const TARGETING = {
 const INSTRUCTIONS = {
     CHANGE_CREW_DESIGNATE_REMOVE: "Designate new/remove current assistant crewman.",
     DRAW_RNC: "Draw RNC.",
-    FIRE_ANY_CARD_CORNERED: "Fire at highest priority target. Use any available Fire card.",
     FIRE_PLAYER_CHOICE_CLOSE_THREAT: "Fire at highest priority valid target (RR 4/5). Use lowest usable FP cost Fire card.",
     FIRE_PLAYER_CHOICE: "Fire using the highest FP Fire card(s) possible (at current RR to priority target).",
     INFILTRATE_PLAY_MOVE_CARD: "Choose any Movement card for Infiltration attempt.",
@@ -351,6 +362,14 @@ const ACTION_DEFINITIONS = {
         postActionInstructionKey: "DISCARD_FIRE_DRAW",
         displayTriggerTextKeys: ["HAS_FIRE_CARD"]
     },
+    FIRE_INFILTRATE: {
+        text: ACTIONS.FIRE_INFILTRATE.text, type: ACTIONS.FIRE_INFILTRATE.type,
+        conditions: ["HAS_FIRE_CARD", "IS_INFILTRATING_ANY"],
+        targetingKey: "FIRE_EFF_INFILTRATE",
+        instructionKey: "FIRE_PLAYER_CHOICE",
+        postActionInstructionKey: "DISCARD_FIRE_DRAW",
+        displayTriggerTextKeys: ["HAS_FIRE_CARD"]
+    },
     FIRE_GEN: {
         text: ACTIONS.FIRE_GEN.text, type: ACTIONS.FIRE_GEN.type,
         conditions: ["HAS_FIRE_CARD"],
@@ -402,7 +421,7 @@ const ACTION_DEFINITIONS = {
     MOVE_RETREAT_SIDEWAYS: {
         text: ACTIONS.MOVE_RETREAT_SIDEWAYS.text, type: ACTIONS.MOVE_RETREAT_SIDEWAYS.type,
         conditions: ["HAS_MOVE_CARD", "IS_NOT_MOVING", "!PINNED_ANY"],
-        targetingKey: "MOVE_DIR_RETREAT",
+        targetingKey: "MOVE_DIR_SIDEWAYS",
         instructionKey: "MOVE_PLAYER_CHOICE_SIDE",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",
         displayTriggerTextKeys: ["HAS_MOVE_CARD", "IS_NOT_MOVING"]
@@ -525,7 +544,7 @@ const ACTION_DEFINITIONS = {
         targetingKey: "INFILTRATE",
         instructionKey: "DRAW_RNC",
         postActionInstructionKey: "INFILTRATION_ATTEMPT_MORALE",
-        displayTriggerTextKeys: ["!PINNED_ANY", "PLAYER_AT_RR_5"]
+        displayTriggerTextKeys: ["SLA_NO_PINNED_UNITS", "PLAYER_AT_RR_5"]
      },
      INFILTRATE_MOVE: {
         text: ACTIONS.INFILTRATE_MOVE.text, type: ACTIONS.INFILTRATE_MOVE.type,
@@ -573,45 +592,46 @@ const DISCARD_ACTION_DEFINITIONS = {
 const slaPriorities = {
     Line: {
         Effective: [
-            { actionRef: "MOVE_OBJECTIVE",        rncCondition:   {},                                priority: 3 },
-            { actionRef: "FIRE_HIGH_OPP",         rncCondition:   { black: ["0...1"] },              priority: 2 },
-            { actionRef: "RALLY_ALL",             rncCondition:   {},                                priority: 0 },
-            { actionRef: "RALLY_NUM",             rncCondition:   {},                                priority: 0 },
-            { actionRef: "PLACE_TERRAIN_SELF",    rncCondition:   { red: "ANY" },                    priority: 0 },
-            { actionRef: "FIRE_OPP",              rncCondition:   { black: ["2...6"] },              priority: 0 },
-            { actionRef: "FIRE_GEN",              rncCondition:   { red: "ANY" },                    priority: 0 },
-            { actionRef: "INFILTRATE_MOVE",       rncCondition:   { red: "ANY" },                    priority: 0 },
-            { actionRef: "INFILTRATE_MORALE",     rncCondition:   { black: "ANY" },                  priority: 0 },
-            { actionRef: "MOVE_FLANK",            rncCondition:   { black: ["2...6"] },              priority: 0 },
-            { actionRef: "MOVE_ADVANCE",          rncCondition:   { black: ["0...1"], red: "ANY" },  priority: 0 },
-            { actionRef: "LAY_SMOKE",             rncCondition:   { black: "ANY" },                  priority: 0 },
-            { actionRef: "ENTRENCH",              rncCondition:   { red: "ANY" },                    priority: 0 },
-            { actionRef: "FIX_WEAPON",            rncCondition:   {},                                priority: 0 },
-            { actionRef: "ACQUIRE_WEAPON",        rncCondition:   {},                                priority: 0 },
-            { actionRef: "CHANGE_CREW",           rncCondition:   {},                                priority: 0 },
-            { actionRef: "TRANSFER_IND",          rncCondition:   {},                                priority: 0 },
-            { actionRef: "COUNTER_SNIPER",        rncCondition:   { black: "ANY" },                  priority: 0 },
-            { actionRef: "PLACE_TERRAIN_SELF",    rncCondition:   {},                                priority: 0 },
-            { actionRef: "HOLD",                  rncCondition:   {},                                priority: 0 }
+            { actionRef: "MOVE_OBJECTIVE",        rncCondition:   {},                                priority:  3 },
+            { actionRef: "FIRE_INFILTRATE",       rncCondition:   {},                                priority:  2 },
+            { actionRef: "FIRE_HIGH_OPP",         rncCondition:   { black: ["0...1"] },              priority:  2 },
+            { actionRef: "RALLY_ALL",             rncCondition:   {},                                priority:  0 },
+            { actionRef: "RALLY_NUM",             rncCondition:   {},                                priority:  0 },
+            { actionRef: "PLACE_TERRAIN_SELF",    rncCondition:   { red: "ANY" },                    priority:  0 },
+            { actionRef: "FIRE_OPP",              rncCondition:   { black: ["2...6"] },              priority:  0 },
+            { actionRef: "FIRE_GEN",              rncCondition:   { red: "ANY" },                    priority:  0 },
+            { actionRef: "INFILTRATE_MOVE",       rncCondition:   { red: "ANY" },                    priority:  0 },
+            { actionRef: "INFILTRATE_MORALE",     rncCondition:   { black: "ANY" },                  priority:  0 },
+            { actionRef: "MOVE_FLANK",            rncCondition:   { black: ["2...6"] },              priority:  0 },
+            { actionRef: "MOVE_ADVANCE",          rncCondition:   { black: ["0...1"], red: "ANY" },  priority:  0 },
+            { actionRef: "LAY_SMOKE",             rncCondition:   { black: "ANY" },                  priority:  0 },
+            { actionRef: "ENTRENCH",              rncCondition:   { red: "ANY" },                    priority:  0 },
+            { actionRef: "FIX_WEAPON",            rncCondition:   {},                                priority:  0 },
+            { actionRef: "ACQUIRE_WEAPON",        rncCondition:   {},                                priority:  0 },
+            { actionRef: "CHANGE_CREW",           rncCondition:   {},                                priority:  0 },
+            { actionRef: "TRANSFER_IND",          rncCondition:   {},                                priority:  0 },
+            { actionRef: "COUNTER_SNIPER",        rncCondition:   { black: "ANY" },                  priority:  0 },
+            { actionRef: "PLACE_TERRAIN_SELF",    rncCondition:   {},                                priority:  0 },
+            { actionRef: "HOLD",                  rncCondition:   {},                                priority: -1 }
         ],
         Stressed: [
-            { actionRef: "BANZAI",                rncCondition:   {},                                priority: 3 },
-            { actionRef: "REMOVE_WIRE",           rncCondition:   {},                                priority: 2 },
-            { actionRef: "REMOVE_MINEFIELD",      rncCondition:   {},                                priority: 1 },
-            { actionRef: "EXIT_MINEFIELD",        rncCondition:   {},                                priority: 0 },
-            { actionRef: "RALLY_ALL",             rncCondition:   {},                                priority: 0 },
-            { actionRef: "RALLY_NUM",             rncCondition:   {},                                priority: 0 },
-            { actionRef: "PLACE_TERRAIN_SELF",    rncCondition:   {},                                priority: 0 },
-            { actionRef: "COUNTER_SNIPER",        rncCondition:   { red: "ANY" },                    priority: 0 },
-            { actionRef: "MOVE_CAUTIOUS",         rncCondition:   { black: ["0...2"] },              priority: 0 },
-            { actionRef: "MOVE_RETREAT",          rncCondition:   { black: "ANY", red: ["0...1"]},   priority: 0 },
-            { actionRef: "MOVE_RETREAT_SIDEWAYS", rncCondition:   { red: ["2...6"] },                priority: 0 },
-            { actionRef: "LAY_SMOKE",             rncCondition:   {},                                priority: 0 },
-            { actionRef: "FIX_WEAPON",            rncCondition:   {},                                priority: 0 },
-            { actionRef: "ENTRENCH",              rncCondition:   { red: ["4...6"] },                priority: 0 },
-            { actionRef: "FIRE_DEF",              rncCondition:   { black: "ANY" },                  priority: 0 },
-            { actionRef: "FIRE_CLOSE_THREAT",     rncCondition:   { red: "ANY" },                    priority: 0 },
-            { actionRef: "HOLD",                  rncCondition:   {},                                priority: 0 }
+            { actionRef: "BANZAI",                rncCondition:   {},                                priority:  3 },
+            { actionRef: "REMOVE_WIRE",           rncCondition:   {},                                priority:  2 },
+            { actionRef: "REMOVE_MINEFIELD",      rncCondition:   {},                                priority:  1 },
+            { actionRef: "EXIT_MINEFIELD",        rncCondition:   {},                                priority:  0 },
+            { actionRef: "RALLY_ALL",             rncCondition:   {},                                priority:  0 },
+            { actionRef: "RALLY_NUM",             rncCondition:   {},                                priority:  0 },
+            { actionRef: "PLACE_TERRAIN_SELF",    rncCondition:   {},                                priority:  0 },
+            { actionRef: "COUNTER_SNIPER",        rncCondition:   { red: "ANY" },                    priority:  0 },
+            { actionRef: "MOVE_CAUTIOUS",         rncCondition:   { black: ["0...2"] },              priority:  0 },
+            { actionRef: "MOVE_RETREAT",          rncCondition:   { black: "ANY", red: ["0...1"]},   priority:  0 },
+            { actionRef: "MOVE_RETREAT_SIDEWAYS", rncCondition:   { red: ["2...6"] },                priority:  0 },
+            { actionRef: "LAY_SMOKE",             rncCondition:   {},                                priority:  0 },
+            { actionRef: "FIX_WEAPON",            rncCondition:   {},                                priority:  0 },
+            { actionRef: "ENTRENCH",              rncCondition:   { red: ["4...6"] },                priority:  0 },
+            { actionRef: "FIRE_DEF",              rncCondition:   { black: "ANY" },                  priority:  0 },
+            { actionRef: "FIRE_CLOSE_THREAT",     rncCondition:   { red: "ANY" },                    priority:  0 },
+            { actionRef: "HOLD",                  rncCondition:   {},                                priority: -1 }
         ]
     }
 };

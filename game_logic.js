@@ -14,7 +14,7 @@ let activeScenarioFeatures = {
 };
 
 let pinnedCountInput, slPinnedKIAInput, inWireInput, isFlankedInput, isMovingInput, isFlankingInput;
-let isEncircledInput, isEntrenchedInput, isInfiltratedInput;
+let isEncircledInput, isEntrenchedInput, isInfiltratedInput, isInfiltratingAnyInput;
 let terrainTypeSelect;
 let slaTroopQualitySelect, slaNationalitySelect, stanceSelect, statusDisplay, priorityList;
 let checkConcealButton, concealResult;
@@ -298,11 +298,13 @@ const conditionCheckers = {
     "PINNED_GT1": (inputs) => parseInt(inputs.pinnedCountInput?.value ?? '0') > 1,
     "PINNED_LEADER": (inputs) => inputs.slPinnedKIAInput?.checked ?? false,
     "PINNED_ANY": (inputs) => parseInt(inputs.pinnedCountInput?.value ?? '0') > 0,
+    "SLA_NO_PINNED_UNITS": (inputs) => (parseInt(inputs.pinnedCountInput?.value ?? '0') === 0),
     "PINNED_OR_KIA_SL": (inputs) => inputs.slPinnedKIAInput?.checked ?? false,
     "IN_WIRE": (inputs) => inputs.inWireInput?.checked ?? false,
     "IN_MINEFIELD": (inputs) => inputs.terrainTypeSelect?.value === 'Minefield',
     "IS_ENTRENCHED": (inputs) => inputs.isEntrenchedInput?.checked ?? false,
     "IS_INFILTRATED": (inputs) => inputs.isInfiltratedInput?.checked ?? false,
+    "IS_INFILTRATING_ANY": (inputs) => inputs.isInfiltratingAnyInput?.checked ?? false,
     "IS_NOT_ENTRENCHED": (inputs) => !(inputs.isEntrenchedInput?.checked ?? false),
     "IS_MOVING": (inputs) => inputs.isMovingInput?.checked ?? false,
     "IS_NOT_MOVING": (inputs) => !(inputs.isMovingInput?.checked ?? false),
@@ -495,7 +497,7 @@ function updateSLAState() {
     const currentStateInputs = {
         pinnedCountInput, slPinnedKIAInput, inWireInput, isFlankedInput,
         isMovingInput, isFlankingInput, terrainTypeSelect, isEncircledInput,
-        isEntrenchedInput, isInfiltratedInput
+        isEntrenchedInput, isInfiltratedInput, isInfiltratingAnyInput
     };
 
     let statusText = isStressed ? "Stressed" : "Effective";
@@ -1482,6 +1484,7 @@ function initializeGameLogic() {
     isEncircledInput = document.getElementById('isEncircled');
     isEntrenchedInput = document.getElementById('isEntrenched');
     isInfiltratedInput = document.getElementById('isInfiltrated');
+    isInfiltratingAnyInput = document.getElementById('isInfiltratingAny');
     slaTroopQualitySelect = document.getElementById('slaTroopQuality');
     slaNationalitySelect = document.getElementById('slaNationality');
     stanceSelect = document.getElementById('stanceSelect');
@@ -1508,7 +1511,7 @@ function initializeGameLogic() {
 
     const essentialElements = [
         pinnedCountInput, slPinnedKIAInput, inWireInput, isFlankedInput, isMovingInput, isFlankingInput,
-        terrainTypeSelect, isEncircledInput, isEntrenchedInput, isInfiltratedInput,
+        terrainTypeSelect, isEncircledInput, isEntrenchedInput, isInfiltratedInput, isInfiltratingAnyInput,
         slaTroopQualitySelect, slaNationalitySelect, statusDisplay, priorityList, checkConcealButton,
         concealResult, slaActionSection, rncSelector, selectedRNCValueInput, terrainPlacedSelect,
         checkTerrainAcceptanceButton, terrainPlacementResult, slaHandSizeDisplay, slaNationalityNotes,
@@ -1581,7 +1584,7 @@ function initializeGameLogic() {
 
     const stateChangeInputs = [
         pinnedCountInput, slaTroopQualitySelect, slPinnedKIAInput, inWireInput, isFlankedInput,
-        isMovingInput, isFlankingInput, isEncircledInput, isEntrenchedInput, isInfiltratedInput, terrainTypeSelect, stanceSelect
+        isMovingInput, isFlankingInput, isEncircledInput, isEntrenchedInput, isInfiltratedInput, isInfiltratingAnyInput, terrainTypeSelect, stanceSelect
     ];
 
     stateChangeInputs.forEach(input => {
