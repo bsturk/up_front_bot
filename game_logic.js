@@ -446,6 +446,64 @@ function checkActionConditions(action, currentStateInputs, stance, nationality) 
     return true;
 }
 
+function applyExclusivityFilter(actions) {
+    const actionsWithGroup = [];
+    const actionsWithoutGroup = [];
+
+    for (const action of actions) {
+        if (action.exclusivityGroup) {
+            actionsWithGroup.push(action);
+        } else {
+            actionsWithoutGroup.push(action);
+        }
+    }
+
+    if (actionsWithGroup.length === 0) {
+        return actions;
+    }
+
+    const grouped = {}; // Stores the chosen action for each exclusivityGroup
+
+    for (const action of actionsWithGroup) {
+        const groupName = action.exclusivityGroup;
+        const currentPriorityInGroup = action.priorityInGroup !== undefined ? action.priorityInGroup : -Infinity;
+
+        if (!grouped[groupName]) {
+            grouped[groupName] = action;
+        } else {
+            const existingActionInGroup = grouped[groupName];
+            const existingPriorityInGroup = existingActionInGroup.priorityInGroup !== undefined ? existingActionInGroup.priorityInGroup : -Infinity;
+
+            let currentIsBetter = false;
+
+            if (currentPriorityInGroup > existingPriorityInGroup) {
+                currentIsBetter = true;
+            } else if (currentPriorityInGroup === existingPriorityInGroup) {
+                const currentSlaPriority = action.priority !== undefined ? action.priority : -Infinity;
+                const existingSlaPriority = existingActionInGroup.priority !== undefined ? existingActionInGroup.priority : -Infinity;
+
+                if (currentSlaPriority > existingSlaPriority) {
+                    currentIsBetter = true;
+                } else if (currentSlaPriority === existingSlaPriority) {
+                    if (action._initialIndex < existingActionInGroup._initialIndex) {
+                        currentIsBetter = true;
+                    }
+                }
+            }
+
+            if (currentIsBetter) {
+                grouped[groupName] = action;
+            }
+        }
+    }
+
+    const finalActions = [...Object.values(grouped), ...actionsWithoutGroup];
+    return finalActions;
+}
+//
+//
+//
+
 function updateSLAState() {
     if (!requireNationalitySelected()) {
         if (priorityList) priorityList.innerHTML = '<div>(Select Nationality and Calculate Status)</div>';
@@ -574,21 +632,6 @@ function updateSLAState() {
          standardHydratedActions.push(hydratedAction);
     }
 
-    standardHydratedActions.sort((a, b) => {
-        // Primary sort: numerical priority (descending)
-        if (b.priority !== a.priority) {
-            return b.priority - a.priority;
-        }
-        // Secondary sort: computed weight (descending)
-        const wa = computeActionWeight(a, rncValue, rncIsRed, currentStance);
-        const wb = computeActionWeight(b, rncValue, rncIsRed, currentStance);
-        if (wb !== wa) {
-            return wb - wa;
-        }
-        // Tertiary sort: original order
-        return a._initialIndex - b._initialIndex;
-    });
-
     const holdActionDef = ACTION_DEFINITIONS['HOLD'];
     const isHoldAlreadyIncluded = standardHydratedActions.some(p => p.actionKey === 'HOLD');
 
@@ -603,6 +646,7 @@ function updateSLAState() {
              postActionInstructionKey: holdActionDef.postActionInstructionKey || 'HOLD_DISCARD_OPTIONAL',
              displayTriggerTextKeys: Array.isArray(holdActionDef.displayTriggerTextKeys) ? holdActionDef.displayTriggerTextKeys : ["ALWAYS_TRUE"],
              priority: 0,
+             _initialIndex: standardHydratedActions.length
          };
 
          if (!Array.isArray(hydratedHold.displayTriggerTextKeys) || hydratedHold.displayTriggerTextKeys.length === 0) {
@@ -619,7 +663,21 @@ function updateSLAState() {
          }
     }
 
-    const allValidActions = standardHydratedActions;
+    let actionsAfterExclusivity = applyExclusivityFilter(standardHydratedActions);
+
+    actionsAfterExclusivity.sort((a, b) => {
+        if (b.priority !== a.priority) {
+            return b.priority - a.priority;
+        }
+        const wa = computeActionWeight(a, rncValue, rncIsRed, currentStance);
+        const wb = computeActionWeight(b, rncValue, rncIsRed, currentStance);
+        if (wb !== wa) {
+            return wb - wa;
+        }
+        return a._initialIndex - b._initialIndex;
+    });
+
+    const allValidActions = actionsAfterExclusivity;
 
     priorityList.innerHTML = '';
 

@@ -352,7 +352,9 @@ const ACTION_DEFINITIONS = {
         targetingKey: "FIRE_AGG_EFF_HIGH_OPP",
         instructionKey: "FIRE_PLAYER_CHOICE",
         postActionInstructionKey: "DISCARD_FIRE_DRAW",
-        displayTriggerTextKeys: ["HAS_FIRE_CARD"]
+        displayTriggerTextKeys: ["HAS_FIRE_CARD"],
+        exclusivityGroup: "FIRE_PRIMARY",
+        priorityInGroup: 5
     },
     FIRE_OPP: {
         text: ACTIONS.FIRE_OPP.text, type: ACTIONS.FIRE_OPP.type,
@@ -360,7 +362,9 @@ const ACTION_DEFINITIONS = {
         targetingKey: "FIRE_STD_EFF_OPP",
         instructionKey: "FIRE_PLAYER_CHOICE",
         postActionInstructionKey: "DISCARD_FIRE_DRAW",
-        displayTriggerTextKeys: ["HAS_FIRE_CARD"]
+        displayTriggerTextKeys: ["HAS_FIRE_CARD"],
+        exclusivityGroup: "FIRE_PRIMARY",
+        priorityInGroup: 3
     },
     FIRE_INFILTRATE: {
         text: ACTIONS.FIRE_INFILTRATE.text, type: ACTIONS.FIRE_INFILTRATE.type,
@@ -368,7 +372,9 @@ const ACTION_DEFINITIONS = {
         targetingKey: "FIRE_EFF_INFILTRATE",
         instructionKey: "FIRE_PLAYER_CHOICE",
         postActionInstructionKey: "DISCARD_FIRE_DRAW",
-        displayTriggerTextKeys: ["HAS_FIRE_CARD"]
+        displayTriggerTextKeys: ["HAS_FIRE_CARD"],
+        exclusivityGroup: "FIRE_PRIMARY",
+        priorityInGroup: 10
     },
     FIRE_GEN: {
         text: ACTIONS.FIRE_GEN.text, type: ACTIONS.FIRE_GEN.type,
@@ -376,7 +382,9 @@ const ACTION_DEFINITIONS = {
         targetingKey: "FIRE_STD_EFF_GEN",
         instructionKey: "FIRE_PLAYER_CHOICE",
         postActionInstructionKey: "DISCARD_FIRE_DRAW",
-        displayTriggerTextKeys: ["HAS_FIRE_CARD"]
+        displayTriggerTextKeys: ["HAS_FIRE_CARD"],
+        exclusivityGroup: "FIRE_PRIMARY",
+        priorityInGroup: 1
     },
     MOVE_FLANK: {
         text: ACTIONS.MOVE_FLANK.text, type: ACTIONS.MOVE_FLANK.type,
@@ -528,7 +536,9 @@ const ACTION_DEFINITIONS = {
         targetingKey: "FIRE_STD_STR_DEF",
         instructionKey: "FIRE_PLAYER_CHOICE",
         postActionInstructionKey: "DISCARD_FIRE_DRAW",
-        displayTriggerTextKeys: ["HAS_FIRE_CARD", "PLAYER_AT_RR_4_OR_5"]
+        displayTriggerTextKeys: ["HAS_FIRE_CARD", "PLAYER_AT_RR_4_OR_5"],
+        exclusivityGroup: "FIRE_PRIMARY",
+        priorityInGroup: 2
     },
     FIRE_CLOSE_THREAT: {
         text: ACTIONS.FIRE_CLOSE_THREAT.text, type: ACTIONS.FIRE_CLOSE_THREAT.type,
@@ -536,7 +546,9 @@ const ACTION_DEFINITIONS = {
         targetingKey: "FIRE_CAU_STR_CLOSE",
         instructionKey: "FIRE_PLAYER_CHOICE_CLOSE_THREAT",
         postActionInstructionKey: "DISCARD_FIRE_DRAW",
-        displayTriggerTextKeys: ["HAS_FIRE_CARD", "PLAYER_AT_RR_4_OR_5"]
+        displayTriggerTextKeys: ["HAS_FIRE_CARD", "PLAYER_AT_RR_4_OR_5"],
+        exclusivityGroup: "FIRE_PRIMARY",
+        priorityInGroup: 4
     },
     INFILTRATE_MORALE: {
         text: ACTIONS.INFILTRATE_MORALE.text, type: ACTIONS.INFILTRATE_MORALE.type,
