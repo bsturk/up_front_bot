@@ -50,12 +50,12 @@ const ACTIONS = {
     RALLY_NUM:             { text: "Rally #",                   type: "Rally" },
     REMOVE_WIRE:           { text: "Remove Wire",               type: "Terrain" },
     TRANSFER_IND:          { text: "Individual Transfer",       type: "Misc" },
-    COUNTER_SNIPER:        { text: "Counter-Sniper",            type: "Misc" },
+    SNIPER_CHECK:          { text: "Sniper-Check",              type: "Misc" },
 };
 
 const CONDITIONS = {
     "ALWAYS_TRUE": "Default action if other conditions not met",
-    "WAS_TARGETED_BY_SNIPER_LAST_TURN": "Targeted by enemy sniper last turn",
+    "WAS_TARGETED_BY_SNIPER_LAST_TURN": "SLA Group targeted by enemy sniper last turn",
     "HAS_FIRE_CARD": "Fire card(s) available",
     "HAS_MOVE_CARD": "Movement card available",
     "HAS_FLANK_CARD": "Movement with Flank card available",
@@ -70,7 +70,7 @@ const CONDITIONS = {
     "IS_ENCIRCLED": "Is Encircled",
     "IS_ENTRENCHED": "Is Entrenched",
     "IS_INFILTRATED": "Is Infiltrated",
-    "IS_INFILTRATING_ANY": "Is Infiltrating any Group",
+    "IS_INFILTRATING_ANY": "Is Infiltrating any Player Group",
     "IS_NOT_ENTRENCHED": "Is not Entrenched",
     "IS_MOVING": "Is Moving",
     "IS_NOT_MOVING": "Not Moving",
@@ -80,14 +80,16 @@ const CONDITIONS = {
     "NOT_IN_BENEFICIAL_TERRAIN": "Not In Beneficial Terrain",
     "NOT_PINNED_LEADER": "SL/ASL Not Pinned/KIA",
     "OBJECTIVE_IN_RANGE": "Scenario has specific range for victory and an SLA group is 1 away",
-    "PINNED_ANY": "> Any Pinned units in SLA",
+    "PINNED_ANY": "Any Pinned units in SLA group",
     "PINNED_LEADER": "SL/ASL Pinned/KIA",
-    "SLA_NO_PINNED_UNITS": "SLA has no Pinned units",
+    "UNPINNED_ANY": "Any Unpinned units in SLA group",
+    "SLA_NO_PINNED_UNITS": "SLA Group has no Pinned units",
     "PLAYER_AT_RR_5": "Any Player group at RR 5",
     "PLAYER_AT_RR_4_OR_5": "Any Player group at RR 4 or 5",
     "PLAYER_AT_RR_LT_5": "Any Player group at RR < 5",
     "SITUATIONAL_PLAYER_JUDGEMENT": "Situational (Player judgement)",
-    "WEAPON_MALFUNCTIONED_ANY": "Any current Group weapon malfunctioned",
+    "SNIPER_CARDS_ARE_NOT_COWER": "Sniper cards are not Cower cards",
+    "WEAPON_MALFUNCTIONED_ANY": "Any current SLA Group weapon malfunctioned",
     "IS_JAPANESE": "Nationality is Japanese",
     "HAS_VICTORY_LOCATION": "Victory condition(s) involve a 'Location'",
     "HAS_VICTORY_POINTS": "Victory condition(s) require Victory Points",
@@ -295,7 +297,7 @@ const INSTRUCTIONS = {
     TRANSFER_PLAY_MOVE_DISCARD: "Play Movement card to Discard.",
     DISCARD_CARD_DRAW_ONE: "Discard 1 card of the specified type from the SLA hand.",
     DISCARD_NO_ACTION: "Choose not to take a Discard Action.",
-    ATTEMPT_COUNTER_SNIPER_DRAW_RNC: "Draw RNC.",
+    ATTEMPT_SNIPER_CHECK_DRAW_RNC: "Draw RNC.",
 };
 
 const POST_ACTION_INSTRUCTIONS = {
@@ -318,7 +320,7 @@ const POST_ACTION_INSTRUCTIONS = {
     INFILTRATION_ATTEMPT_MORALE: "Take a morale check (pass if RNC < Morale, ignoring color). If successful, check RPN column under group size with modifiers. Success if number is red - place an Infiltration marker on target Player group.",
     INFILTRATION_ATTEMPT_MOVE: "Check RPN column under group size with modifiers. Success if number is red - place an Infiltration marker on target Player group.",
     END_DISCARD_PHASE: "The turn is over for the SLA player.",
-    RESOLVE_COUNTER_SNIPER_ATTEMPT: "If RNC black & > enemy sniper RNC, enemy sniper eliminated.",
+    RESOLVE_SNIPER_CHECK_ATTEMPT: "If RNC black & > enemy sniper RNC, enemy sniper eliminated.",
 };
 
 const ACTION_DEFINITIONS = {
@@ -506,13 +508,13 @@ const ACTION_DEFINITIONS = {
         postActionInstructionKey: "BANZAI_POST",
         displayTriggerTextKeys: ["HAS_MOVE_CARD", "NOT_PINNED_LEADER"]
     },
-    COUNTER_SNIPER: {
-        text: ACTIONS.COUNTER_SNIPER.text, type: ACTIONS.COUNTER_SNIPER.type,
+    SNIPER_CHECK: {
+        text: ACTIONS.SNIPER_CHECK.text, type: ACTIONS.SNIPER_CHECK.type,
         conditions: ["WAS_TARGETED_BY_SNIPER_LAST_TURN"],
         targetingKey: "NONE",
-        instructionKey: "ATTEMPT_COUNTER_SNIPER_DRAW_RNC",
-        postActionInstructionKey: "RESOLVE_COUNTER_SNIPER_ATTEMPT",
-        displayTriggerTextKeys: ["WAS_TARGETED_BY_SNIPER_LAST_TURN"]
+        instructionKey: "ATTEMPT_SNIPER_CHECK_DRAW_RNC",
+        postActionInstructionKey: "RESOLVE_SNIPER_CHECK_ATTEMPT",
+        displayTriggerTextKeys: ["WAS_TARGETED_BY_SNIPER_LAST_TURN", "UNPINNED_ANY"]
     },
     HOLD: {
         text: ACTIONS.HOLD.text, type: ACTIONS.HOLD.type,
@@ -584,7 +586,7 @@ const DISCARD_ACTION_DEFINITIONS = {
         text: "Discard Sniper Card",
         type: "Discard",
         targetingKey: ["TARGET_ENEMY_GROUP_SNIPER"],
-        conditions: ["HAS_SNIPER_CARD"],
+        conditions: ["HAS_SNIPER_CARD", "SNIPER_CARDS_ARE_NOT_COWER"],
         instructionKey: "PLAY_SNIPER_CARD",
         postActionInstructionKey: "DISCARD_SNIPER_CARD",
         displayTriggerTextKeys: ["HAS_SNIPER_CARD"]
@@ -622,7 +624,7 @@ const slaPriorities = {
             { actionRef: "ACQUIRE_WEAPON",        rncCondition:   {},                                priority:  0 },
             { actionRef: "CHANGE_CREW",           rncCondition:   {},                                priority:  0 },
             { actionRef: "TRANSFER_IND",          rncCondition:   {},                                priority:  0 },
-            { actionRef: "COUNTER_SNIPER",        rncCondition:   { black: "ANY" },                  priority:  0 },
+            { actionRef: "SNIPER_CHECK",          rncCondition:   { black: "ANY" },                  priority:  0 },
             { actionRef: "PLACE_TERRAIN_SELF",    rncCondition:   {},                                priority:  0 },
             { actionRef: "HOLD",                  rncCondition:   {},                                priority: -1 }
         ],
@@ -634,7 +636,7 @@ const slaPriorities = {
             { actionRef: "RALLY_ALL",             rncCondition:   {},                                priority:  0 },
             { actionRef: "RALLY_NUM",             rncCondition:   {},                                priority:  0 },
             { actionRef: "PLACE_TERRAIN_SELF",    rncCondition:   {},                                priority:  0 },
-            { actionRef: "COUNTER_SNIPER",        rncCondition:   { red: "ANY" },                    priority:  0 },
+            { actionRef: "SNIPER_CHECK",          rncCondition:   { red: "ANY" },                    priority:  0 },
             { actionRef: "MOVE_CAUTIOUS",         rncCondition:   { black: ["0...2"] },              priority:  0 },
             { actionRef: "MOVE_RETREAT",          rncCondition:   { black: "ANY", red: ["0...1"]},   priority:  0 },
             { actionRef: "MOVE_RETREAT_SIDEWAYS", rncCondition:   { red: ["2...6"] },                priority:  0 },
