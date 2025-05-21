@@ -67,18 +67,14 @@ const CONDITIONS = {
     "IN_BENEFICIAL_TERRAIN": "In Beneficial Terrain",
     "IN_MINEFIELD": "In Minefield",
     "IN_WIRE": "In Wire",
-    "IS_ENCIRCLED": "Is Encircled",
-    "IS_ENTRENCHED": "Is Entrenched",
-    "IS_INFILTRATED": "Is Infiltrated",
-    "IS_INFILTRATING_ANY": "Is Infiltrating any Player Group",
-    "IS_NOT_ENTRENCHED": "Is not Entrenched",
-    "IS_MOVING": "Is Moving",
-    "IS_NOT_MOVING": "Not Moving",
+    "IS_ENCIRCLED": "Encircled",
+    "IS_ENTRENCHED": "Entrenched",
+    "IS_INFILTRATED": "Infiltrated",
+    "IS_INFILTRATING_ANY": "Infiltrating any Player Group",
+    "IS_MOVING": "Moving",
     "IN_ENTRENCHMENT_TERRAIN": "In legal Entrenchment terrain (not in Open/Marsh/Stream/Wire/Pillbox)",
     "NEARBY_WEAPON_AVAILABLE": "Available unused SLA weapon",
     "NEEDS_CREW_OR_CREW_PINNED": "Possessed weapon needs crew OR designated crewman is Pinned",
-    "NOT_IN_BENEFICIAL_TERRAIN": "Not In Beneficial Terrain",
-    "NOT_PINNED_LEADER": "SL/ASL Not Pinned/KIA",
     "OBJECTIVE_IN_RANGE": "Scenario has specific range for victory and an SLA group is 1 away",
     "PINNED_ANY": "Any Pinned units in SLA group",
     "PINNED_LEADER": "SL/ASL Pinned/KIA",
@@ -390,11 +386,11 @@ const ACTION_DEFINITIONS = {
     },
     MOVE_FLANK: {
         text: ACTIONS.MOVE_FLANK.text, type: ACTIONS.MOVE_FLANK.type,
-        conditions: ["NOT_IN_BENEFICIAL_TERRAIN", "IS_NOT_MOVING", "HAS_FLANK_CARD", "!PINNED_ANY"],
+        conditions: ["!IN_BENEFICIAL_TERRAIN", "!NOT_MOVING", "HAS_FLANK_CARD", "!PINNED_ANY"],
         targetingKey: "MOVE_DIR_FLANK_HIGHEST_THREAT",
         instructionKey: "MOVE_PLAYER_CHOICE_FLANK",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",
-        displayTriggerTextKeys: ["HAS_FLANK_CARD", "IS_NOT_MOVING"],
+        displayTriggerTextKeys: ["HAS_FLANK_CARD", "!IS_MOVING"],
         exclusivityGroup: "MOVE_PRIMARY",
         priorityInGroup: 5
     },
@@ -410,7 +406,7 @@ const ACTION_DEFINITIONS = {
     },
     MOVE_CAUTIOUS: {
         text: ACTIONS.MOVE_CAUTIOUS.text, type: ACTIONS.MOVE_CAUTIOUS.type,
-        conditions: ["HAS_MOVE_CARD", "!PINNED_ANY", "IS_ATTACKER"],
+        conditions: ["!IN_BENEFICIAL_TERRAIN", "HAS_MOVE_CARD", "!IS_MOVING", "!PINNED_ANY", "!IS_ATTACKER", "!IN_MINEFIELD"],
         targetingKey: "MOVE_DIR_ADVANCE",
         instructionKey: "MOVE_PLAYER_CHOICE_ADVANCE",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",
@@ -420,31 +416,31 @@ const ACTION_DEFINITIONS = {
     },
     MOVE_OBJECTIVE: {
         text: ACTIONS.MOVE_OBJECTIVE.text, type: ACTIONS.MOVE_OBJECTIVE.type,
-        conditions: ["HAS_MOVE_CARD", "IS_NOT_MOVING", "!PINNED_ANY", "HAS_VICTORY_LOCATION", "!IS_INFILTRATED"],
+        conditions: ["HAS_MOVE_CARD", "!PINNED_ANY", "HAS_VICTORY_LOCATION", "!IS_INFILTRATED"],
         targetingKey: "MOVE_DIR_OBJECTIVE",
         instructionKey: "MOVE_PLAYER_CHOICE_OBJECTIVE",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",
-        displayTriggerTextKeys: ["HAS_MOVE_CARD", "IS_NOT_MOVING"],
+        displayTriggerTextKeys: ["HAS_MOVE_CARD"],
         exclusivityGroup: "MOVE_PRIMARY",
         priorityInGroup: 10
     },
     MOVE_RETREAT: {
         text: ACTIONS.MOVE_RETREAT.text, type: ACTIONS.MOVE_RETREAT.type,
-        conditions: ["HAS_MOVE_CARD", "IS_NOT_MOVING", "!IN_MINEFIELD"],
+        conditions: ["!IN_BENEFICIAL_TERRAIN", "HAS_MOVE_CARD", "!IS_MOVING", "!IN_MINEFIELD", "!PINNED_ANY"],
         targetingKey: "MOVE_DIR_RETREAT",
         instructionKey: "MOVE_PLAYER_CHOICE_RETREAT",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",
-        displayTriggerTextKeys: ["HAS_MOVE_CARD", "IS_NOT_MOVING"],
+        displayTriggerTextKeys: ["HAS_MOVE_CARD", "!IS_MOVING"],
         exclusivityGroup: "MOVE_PRIMARY",
         priorityInGroup: 2
     },
     MOVE_SIDEWAYS: {
         text: ACTIONS.MOVE_SIDEWAYS.text, type: ACTIONS.MOVE_SIDEWAYS.type,
-        conditions: ["HAS_MOVE_CARD", "IS_NOT_MOVING", "!PINNED_ANY"],
+        conditions: ["HAS_MOVE_CARD", "!IS_MOVING", "!PINNED_ANY"],
         targetingKey: "MOVE_DIR_SIDEWAYS",
         instructionKey: "MOVE_PLAYER_CHOICE_SIDE",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",
-        displayTriggerTextKeys: ["HAS_MOVE_CARD", "IS_NOT_MOVING"],
+        displayTriggerTextKeys: ["HAS_MOVE_CARD", "!IS_MOVING"],
         exclusivityGroup: "MOVE_PRIMARY",
         priorityInGroup: 1
     },
@@ -474,11 +470,11 @@ const ACTION_DEFINITIONS = {
     },
     ENTRENCH: {
         text: ACTIONS.ENTRENCH.text, type: ACTIONS.ENTRENCH.type,
-        conditions: ["IN_ENTRENCHMENT_TERRAIN","IS_NOT_ENTRENCHED","IS_DEFENDER"],
+        conditions: ["IN_ENTRENCHMENT_TERRAIN","!IS_ENTRENCHED","IS_DEFENDER"],
         targetingKey: "NONE",
         instructionKey: "DRAW_RNC",
         postActionInstructionKey: "ENTRENCH_RESULT",
-        displayTriggerTextKeys: ["IN_ENTRENCHMENT_TERRAIN","IS_NOT_ENTRENCHED"]
+        displayTriggerTextKeys: ["IN_ENTRENCHMENT_TERRAIN","!IS_ENTRENCHED"]
     },
     FIX_WEAPON: {
         text: ACTIONS.FIX_WEAPON.text, type: ACTIONS.FIX_WEAPON.type,
@@ -518,7 +514,7 @@ const ACTION_DEFINITIONS = {
         targetingKey: "NONE",
         instructionKey: "PLAY_ANY_MOVE_TEMP",
         postActionInstructionKey: "BANZAI_POST",
-        displayTriggerTextKeys: ["HAS_MOVE_CARD", "NOT_PINNED_LEADER"]
+        displayTriggerTextKeys: ["HAS_MOVE_CARD", "!PINNED_LEADER"]
     },
     SNIPER_CHECK: {
         text: ACTIONS.SNIPER_CHECK.text, type: ACTIONS.SNIPER_CHECK.type,
@@ -566,7 +562,7 @@ const ACTION_DEFINITIONS = {
     },
     INFILTRATE_MORALE: {
         text: ACTIONS.INFILTRATE_MORALE.text, type: ACTIONS.INFILTRATE_MORALE.type,
-        conditions: ["PLAYER_AT_RR_5", "IS_NOT_MOVING", "!PINNED_ANY", "!IN_MINEFIELD", "!IN_WIRE", "IS_ATTACKER"],
+        conditions: ["PLAYER_AT_RR_5", "!IS_MOVING", "!PINNED_ANY", "!IN_MINEFIELD", "!IN_WIRE", "IS_ATTACKER"],
         targetingKey: "INFILTRATE",
         instructionKey: "DRAW_RNC",
         postActionInstructionKey: "INFILTRATION_ATTEMPT_MORALE",
@@ -574,7 +570,7 @@ const ACTION_DEFINITIONS = {
      },
      INFILTRATE_MOVE: {
         text: ACTIONS.INFILTRATE_MOVE.text, type: ACTIONS.INFILTRATE_MOVE.type,
-        conditions: ["PLAYER_AT_RR_5", "IS_NOT_MOVING", "!PINNED_ANY", "!IN_MINEFIELD", "!IN_WIRE", "IS_ATTACKER"],
+        conditions: ["PLAYER_AT_RR_5", "!IS_MOVING", "!PINNED_ANY", "!IN_MINEFIELD", "!IN_WIRE", "IS_ATTACKER"],
         targetingKey: "INFILTRATE",
         instructionKey: "INFILTRATE_PLAY_MOVE_CARD",
         postActionInstructionKey: "INFILTRATION_ATTEMPT_MOVE",
