@@ -76,10 +76,10 @@ const CONDITIONS = {
     "NEARBY_WEAPON_AVAILABLE": "Available unused SLA weapon",
     "NEEDS_CREW_OR_CREW_PINNED": "Possessed weapon needs crew OR designated crewman is Pinned",
     "OBJECTIVE_IN_RANGE": "Scenario has specific range for victory and an SLA group is 1 away",
-    "PINNED_ANY": "Any Pinned units in SLA group",
+    "PINNED_ANY": "Any Pinned personalities in SLA group",
     "PINNED_LEADER": "SL/ASL Pinned/KIA",
-    "UNPINNED_ANY": "Any Unpinned units in SLA group",
-    "SLA_NO_PINNED_UNITS": "SLA Group has no Pinned units",
+    "UNPINNED_ANY": "Any Unpinned personalities in SLA group",
+    "SLA_NO_PINNED_PERSONALITIES": "SLA Group has no Pinned personalities",
     "PLAYER_AT_RR_5": "Any Player group at RR 5",
     "PLAYER_AT_RR_4_OR_5": "Any Player group at RR 4 or 5",
     "PLAYER_AT_RR_LT_5": "Any Player group at RR < 5",
@@ -104,12 +104,12 @@ const TARGET_CRITERIA = {
     AT_RR_X: (X) => ({ desc: `At RR ${X}` }),
     AT_RR_X_OR_Y: (X, Y) => ({ desc: `At RR ${X} or ${Y}` }),
     CLOSEST_RR: { desc: "Closest (by RR)" },
-    HIGHEST_FP_TOTAL: { desc: "Highest Total FP of Unpinned Units (at current RR)" },
-    LOWEST_FP_TOTAL: { desc: "Lowest Total FP of Unpinned Units (at current RR)" },
-    MOST_UNITS: { desc: "Most Units" },
-    FEWEST_UNITS: { desc: "Fewest Units" },
-    HIGHEST_PINNED_COUNT: { desc: "Most Pinned Units" },
-    LOWEST_PINNED_COUNT: { desc: "Fewest Pinned Units" },
+    HIGHEST_FP_TOTAL: { desc: "Highest Total FP of Unpinned Personalities (at current RR)" },
+    LOWEST_FP_TOTAL: { desc: "Lowest Total FP of Unpinned Personalities (at current RR)" },
+    MOST_PERSONALITIES: { desc: "Most Personalities" },
+    FEWEST_PERSONALITIES: { desc: "Fewest Personalities" },
+    HIGHEST_PINNED_COUNT: { desc: "Most Pinned Personalities" },
+    LOWEST_PINNED_COUNT: { desc: "Fewest Pinned Personalities" },
     LOWEST_GROUP_ID: { desc: "Lowest Group ID (A>B>C>D)" },
 };
 
@@ -128,7 +128,7 @@ const RALLY_TARGET_CRITERIA = {
     HAS_HIGHEST_FP: { desc: "Highest FP among pinned" },
     HAS_HIGHEST_MORALE: { desc: "Highest Morale among pinned" },
     IS_CREW: { desc: "Is manning a weapon as Crew" },
-    HAS_LOWEST_ID: { desc: "Lowest Unit ID" }
+    HAS_LOWEST_ID: { desc: "Lowest Personality ID" }
 };
 
 const TERRAIN_TYPE_CRITERIA = {
@@ -148,55 +148,55 @@ const TERRAIN_TYPE_CRITERIA = {
 const TARGETING = {
     NONE: null,
     FIRE_AGG_EFF_HIGH_OPP: {
-        title: "Target Group Priority:",
+        title: "Target Group:",
         criteria: [ TARGET_CRITERIA.HAS_LEADER, TARGET_CRITERIA.HAS_SPEC_WEAPON_MG, TARGET_CRITERIA.HAS_SPEC_WEAPON_AT, TARGET_CRITERIA.IS_AFV, TARGET_CRITERIA.IS_FLANKED_BY_SLA, TARGET_CRITERIA.AT_RR_X(5), TARGET_CRITERIA.IS_MOVING, TARGET_CRITERIA.IS_IN_OPEN, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     FIRE_AGG_STR_THREAT: {
-        title: "Target Group Priority:",
+        title: "Target Group:",
         criteria: [ TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HAS_LEADER, TARGET_CRITERIA.HAS_SPEC_WEAPON_MG, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     FIRE_CAU_EFF_DEF: {
-        title: "Target Group Priority:",
+        title: "Target Group:",
         criteria: [ TARGET_CRITERIA.IS_MOVING, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     FIRE_CAU_STR_CLOSE: {
-        title: "Target Group Priority:",
-        criteria: [ TARGET_CRITERIA.AT_RR_X_OR_Y(4, 5), TARGET_CRITERIA.LOWEST_FP_TOTAL, TARGET_CRITERIA.FEWEST_UNITS, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.LOWEST_GROUP_ID ]
+        title: "Target Group:",
+        criteria: [ TARGET_CRITERIA.AT_RR_X_OR_Y(4, 5), TARGET_CRITERIA.LOWEST_FP_TOTAL, TARGET_CRITERIA.FEWEST_PERSONALITIES, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     INFILTRATE: {
-        title: "Target Group Priority:",
-        criteria: [ TARGET_CRITERIA.LOWEST_FP_TOTAL, TARGET_CRITERIA.FEWEST_UNITS, TARGET_CRITERIA.LOWEST_GROUP_ID ]
+        title: "Target Group:",
+        criteria: [ TARGET_CRITERIA.LOWEST_FP_TOTAL, TARGET_CRITERIA.FEWEST_PERSONALITIES, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     FIRE_EVA_CORNERED: {
-        title: "Target Group Priority:",
+        title: "Target Group:",
         criteria: [ TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     FIRE_GRN_EFF_GEN: {
-        title: "Target Group Priority:",
+        title: "Target Group:",
         criteria: [ TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     FIRE_GRN_EFF_OPP: {
-        title: "Target Group Priority:",
+        title: "Target Group:",
         criteria: [ TARGET_CRITERIA.IS_FLANKED_BY_SLA, TARGET_CRITERIA.IS_MOVING, TARGET_CRITERIA.IS_IN_OPEN, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     FIRE_GRN_STR_DEF: {
-        title: "Target Group Priority:",
+        title: "Target Group:",
         criteria: [ TARGET_CRITERIA.AT_RR_X_OR_Y(4, 5), TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     FIRE_STD_EFF_GEN: {
-        title: "Target Group Priority:",
+        title: "Target Group:",
         criteria: [ TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.IS_MOVING, TARGET_CRITERIA.IS_IN_OPEN, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     FIRE_STD_EFF_OPP: {
-        title: "Target Group Priority:",
+        title: "Target Group:",
         criteria: [ TARGET_CRITERIA.IS_FLANKED_BY_SLA, TARGET_CRITERIA.IS_MOVING, TARGET_CRITERIA.IS_IN_OPEN, TARGET_CRITERIA.HAS_LEADER, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.LOWEST_PINNED_COUNT, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     FIRE_EFF_INFILTRATE: {
-        title: "Target Group Priority:",
+        title: "Target Group:",
         criteria: [ TARGET_CRITERIA.IS_INFILTRATED_BY_SLA, TARGET_CRITERIA.IS_IN_OPEN, TARGET_CRITERIA.IS_MOVING, TARGET_CRITERIA.HAS_LEADER, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.LOWEST_PINNED_COUNT, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     FIRE_STD_STR_DEF: {
-        title: "Target Group Priority:",
+        title: "Target Group:",
         criteria: [ TARGET_CRITERIA.AT_RR_X_OR_Y(4, 5), TARGET_CRITERIA.IS_MOVING, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     MOVE_DIR_ADVANCE: {
@@ -220,7 +220,7 @@ const TARGETING = {
         description: { desc: ["Sideways to flank an opposed, adjacent Player Group that is not flanking this SLA Group."] }
     },
     TARGET_RALLY_PRIORITY: {
-        title: "Unit Priority:",
+        title: "Personality Priority:",
         criteria: [ RALLY_TARGET_CRITERIA.IS_SL, RALLY_TARGET_CRITERIA.IS_ASL, RALLY_TARGET_CRITERIA.HAS_HIGHEST_FP, RALLY_TARGET_CRITERIA.HAS_HIGHEST_MORALE, RALLY_TARGET_CRITERIA.HAS_LOWEST_ID ]
     },
     TARGET_ADJ_GROUP_LOWEST_ID: {
@@ -229,7 +229,7 @@ const TARGETING = {
     },
     TARGET_ALL_PINNED_IN_GROUP: {
         title: "Target:",
-        description: { desc: ["All pinned units in this group."] }
+        description: { desc: ["All pinned personalities in this group."] }
     },
     TARGET_CREWMAN_NEEDED: {
         title: "Target Personality:",
@@ -244,22 +244,22 @@ const TARGETING = {
         description: { desc: ["This SLA group."] }
     },
     TARGET_ENEMY_GROUP_SNIPER: {
-        title: "Target Group Priority:",
+        title: "Target Group:",
         criteria: [ TARGET_CRITERIA.HAS_LEADER, TARGET_CRITERIA.LOWEST_PINNED_COUNT, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     TARGET_ENEMY_GROUP_MOVING: {
-        title: "Target Moving Group Priority:",
+        title: "Target Moving Group:",
         criteria: [ TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.HAS_LEADER, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     PLACE_TERRAIN_SELF_CARD_PRIORITY: {
-        title: "Terrain Card Priority:",
+        title: "Terrain Card:",
         criteria: [
             TERRAIN_TYPE_CRITERIA.IS_HILL, TERRAIN_TYPE_CRITERIA.IS_BUILDING, TERRAIN_TYPE_CRITERIA.IS_WOODS, TERRAIN_TYPE_CRITERIA.IS_WALLS,
             TERRAIN_TYPE_CRITERIA.IS_GULLY, TERRAIN_TYPE_CRITERIA.IS_PILLBOX, TERRAIN_TYPE_CRITERIA.IS_BRUSH
         ]
     },
     PLACE_TERRAIN_ENEMY_CARD_PRIORITY: {
-        title: "Terrain Card Priority:",
+        title: "Terrain Card:",
         criteria: [
             TERRAIN_TYPE_CRITERIA.IS_MINEFIELD, TERRAIN_TYPE_CRITERIA.IS_SWAMP, TERRAIN_TYPE_CRITERIA.IS_MARSH, TERRAIN_TYPE_CRITERIA.IS_STREAM
         ]
@@ -289,7 +289,7 @@ const INSTRUCTIONS = {
     PLAY_ANY_MOVE_TEMP: "Choose any Movement card.",
     PROCEED_TO_DISCARD: "No action card used. If this was last SLA group to activate, proceed to Discard Phase.",
     RALLY_ALL: "Use Rally All card on this group and any other eligible group (adj if only 1 non-Pinned leader, non-adj if both groups have non-Pinned leader). If used on an additional group, it counts as an action for that group as well.",
-    RALLY_NUM: "Use Numbered Rally card that would rally the most pinned units in the SLA group.",
+    RALLY_NUM: "Use Numbered Rally card that would rally the most pinned personalities in the SLA group.",
     TRANSFER_PLAY_MOVE_DISCARD: "Play Movement card to Discard.",
     DISCARD_CARD_DRAW_ONE: "Discard 1 card of the specified type from the SLA hand.",
     DISCARD_NO_ACTION: "Choose not to take a Discard Action.",
@@ -297,7 +297,7 @@ const INSTRUCTIONS = {
 };
 
 const POST_ACTION_INSTRUCTIONS = {
-    BANZAI_POST: "Discard the Movement card used. Rally all pinned units in the group. Place a Banzai counter on the group.",
+    BANZAI_POST: "Discard the Movement card used. Rally all pinned personalities in the group. Place a Banzai counter on the group.",
     DISCARD_FIRE_DRAW: "Discard the Fire(s) card used.",
     DISCARD_MOVE_DRAW: "Place the Movement card used on the SLA group.",
     DISCARD_RALLY_NUM_DRAW: "Discard the Numbered Rally card used.",
@@ -566,7 +566,7 @@ const ACTION_DEFINITIONS = {
         targetingKey: "INFILTRATE",
         instructionKey: "DRAW_RNC",
         postActionInstructionKey: "INFILTRATION_ATTEMPT_MORALE",
-        displayTriggerTextKeys: ["SLA_NO_PINNED_UNITS", "PLAYER_AT_RR_5"]
+        displayTriggerTextKeys: ["SLA_NO_PINNED_PERSONALITIES", "PLAYER_AT_RR_5"]
      },
      INFILTRATE_MOVE: {
         text: ACTIONS.INFILTRATE_MOVE.text, type: ACTIONS.INFILTRATE_MOVE.type,
