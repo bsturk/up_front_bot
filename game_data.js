@@ -28,7 +28,7 @@ const ACTIONS = {
     ENTRENCH:              { text: "Entrench",                  type: "Misc" },
     EXIT_MINEFIELD:        { text: "Exit Minefield",            type: "Move" },
     REMOVE_MINEFIELD:      { text: "Remove Minefield",          type: "Misc" },
-    FIRE_CLOSE_THREAT:     { text: "Fire (Close Threat Only)",  type: "Fire" },
+    FIRE_CLOSE_THREAT:     { text: "Fire (Close Threat)",       type: "Fire" },
     FIRE_DEF:              { text: "Fire (Defensive)",          type: "Fire" },
     FIRE_GEN:              { text: "Fire (General)",            type: "Fire" },
     FIRE_HIGH_OPP:         { text: "Fire (High Opportunity)",   type: "Fire" },
@@ -43,7 +43,7 @@ const ACTIONS = {
     MOVE_CAUTIOUS:         { text: "Move (Cautious)",           type: "Move" },
     MOVE_OBJECTIVE:        { text: "Move (Towards Objective)",  type: "Move" },
     MOVE_FLANK:            { text: "Move Sideways (Flank)",     type: "Move" },
-    MOVE_RETREAT_SIDEWAYS: { text: "Move (Sideways)",           type: "Move" },
+    MOVE_SIDEWAYS:         { text: "Move (Sideways)",           type: "Move" },
     MOVE_RETREAT:          { text: "Move (Retreat)",            type: "Move" },
     PLACE_TERRAIN_SELF:    { text: "Place Terrain (Self)",      type: "Terrain" },
     RALLY_ALL:             { text: "Rally All",                 type: "Rally" },
@@ -320,7 +320,7 @@ const POST_ACTION_INSTRUCTIONS = {
     INFILTRATION_ATTEMPT_MORALE: "Take a morale check (pass if RNC < Morale, ignoring color). If successful, check RPN column under group size with modifiers. Success if number is red - place an Infiltration marker on target Player group.",
     INFILTRATION_ATTEMPT_MOVE: "Check RPN column under group size with modifiers. Success if number is red - place an Infiltration marker on target Player group.",
     END_DISCARD_PHASE: "The turn is over for the SLA player.",
-    RESOLVE_SNIPER_CHECK_ATTEMPT: "If RNC black & > enemy sniper RNC, enemy sniper eliminated.",
+    RESOLVE_SNIPER_CHECK_ATTEMPT: "If RNC black & > enemy sniper RNC, enemy sniper eliminated.  SLA actions are done as this is the sole action that can be taken.",
 };
 
 const ACTION_DEFINITIONS = {
@@ -394,7 +394,9 @@ const ACTION_DEFINITIONS = {
         targetingKey: "MOVE_DIR_FLANK_HIGHEST_THREAT",
         instructionKey: "MOVE_PLAYER_CHOICE_FLANK",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",
-        displayTriggerTextKeys: ["HAS_FLANK_CARD", "IS_NOT_MOVING"]
+        displayTriggerTextKeys: ["HAS_FLANK_CARD", "IS_NOT_MOVING"],
+        exclusivityGroup: "MOVE_PRIMARY",
+        priorityInGroup: 5
     },
     MOVE_ADVANCE: {
         text: ACTIONS.MOVE_ADVANCE.text, type: ACTIONS.MOVE_ADVANCE.type,
@@ -402,7 +404,9 @@ const ACTION_DEFINITIONS = {
         targetingKey: "MOVE_DIR_ADVANCE",
         instructionKey: "MOVE_PLAYER_CHOICE_ADVANCE",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",
-        displayTriggerTextKeys: ["HAS_MOVE_CARD", "PLAYER_AT_RR_LT_5"]
+        displayTriggerTextKeys: ["HAS_MOVE_CARD", "PLAYER_AT_RR_LT_5"],
+        exclusivityGroup: "MOVE_PRIMARY",
+        priorityInGroup: 4
     },
     MOVE_CAUTIOUS: {
         text: ACTIONS.MOVE_CAUTIOUS.text, type: ACTIONS.MOVE_CAUTIOUS.type,
@@ -410,7 +414,9 @@ const ACTION_DEFINITIONS = {
         targetingKey: "MOVE_DIR_ADVANCE",
         instructionKey: "MOVE_PLAYER_CHOICE_ADVANCE",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",
-        displayTriggerTextKeys: ["HAS_MOVE_CARD"]
+        displayTriggerTextKeys: ["HAS_MOVE_CARD"],
+        exclusivityGroup: "MOVE_PRIMARY",
+        priorityInGroup: 3
     },
     MOVE_OBJECTIVE: {
         text: ACTIONS.MOVE_OBJECTIVE.text, type: ACTIONS.MOVE_OBJECTIVE.type,
@@ -418,7 +424,9 @@ const ACTION_DEFINITIONS = {
         targetingKey: "MOVE_DIR_OBJECTIVE",
         instructionKey: "MOVE_PLAYER_CHOICE_OBJECTIVE",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",
-        displayTriggerTextKeys: ["HAS_MOVE_CARD", "IS_NOT_MOVING"]
+        displayTriggerTextKeys: ["HAS_MOVE_CARD", "IS_NOT_MOVING"],
+        exclusivityGroup: "MOVE_PRIMARY",
+        priorityInGroup: 10
     },
     MOVE_RETREAT: {
         text: ACTIONS.MOVE_RETREAT.text, type: ACTIONS.MOVE_RETREAT.type,
@@ -426,15 +434,19 @@ const ACTION_DEFINITIONS = {
         targetingKey: "MOVE_DIR_RETREAT",
         instructionKey: "MOVE_PLAYER_CHOICE_RETREAT",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",
-        displayTriggerTextKeys: ["HAS_MOVE_CARD", "IS_NOT_MOVING"]
+        displayTriggerTextKeys: ["HAS_MOVE_CARD", "IS_NOT_MOVING"],
+        exclusivityGroup: "MOVE_PRIMARY",
+        priorityInGroup: 2
     },
-    MOVE_RETREAT_SIDEWAYS: {
-        text: ACTIONS.MOVE_RETREAT_SIDEWAYS.text, type: ACTIONS.MOVE_RETREAT_SIDEWAYS.type,
+    MOVE_SIDEWAYS: {
+        text: ACTIONS.MOVE_SIDEWAYS.text, type: ACTIONS.MOVE_SIDEWAYS.type,
         conditions: ["HAS_MOVE_CARD", "IS_NOT_MOVING", "!PINNED_ANY"],
         targetingKey: "MOVE_DIR_SIDEWAYS",
         instructionKey: "MOVE_PLAYER_CHOICE_SIDE",
         postActionInstructionKey: "DISCARD_MOVE_DRAW",
-        displayTriggerTextKeys: ["HAS_MOVE_CARD", "IS_NOT_MOVING"]
+        displayTriggerTextKeys: ["HAS_MOVE_CARD", "IS_NOT_MOVING"],
+        exclusivityGroup: "MOVE_PRIMARY",
+        priorityInGroup: 1
     },
     EXIT_MINEFIELD: {
         text: ACTIONS.EXIT_MINEFIELD.text, type: ACTIONS.EXIT_MINEFIELD.type,
@@ -639,7 +651,7 @@ const slaPriorities = {
             { actionRef: "SNIPER_CHECK",          rncCondition:   { red: "ANY" },                    priority:  0 },
             { actionRef: "MOVE_CAUTIOUS",         rncCondition:   { black: ["0...2"] },              priority:  0 },
             { actionRef: "MOVE_RETREAT",          rncCondition:   { black: "ANY", red: ["0...1"]},   priority:  0 },
-            { actionRef: "MOVE_RETREAT_SIDEWAYS", rncCondition:   { red: ["2...6"] },                priority:  0 },
+            { actionRef: "MOVE_SIDEWAYS",         rncCondition:   { red: ["2...6"] },                priority:  0 },
             { actionRef: "LAY_SMOKE",             rncCondition:   {},                                priority:  0 },
             { actionRef: "FIX_WEAPON",            rncCondition:   {},                                priority:  0 },
             { actionRef: "ENTRENCH",              rncCondition:   { red: ["4...6"] },                priority:  0 },
