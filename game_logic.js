@@ -666,15 +666,18 @@ function updateSLAState() {
     let actionsAfterExclusivity = applyExclusivityFilter(standardHydratedActions);
 
     actionsAfterExclusivity.sort((a, b) => {
+        // Primary sort: explicit 'priority' from slaPriorities (higher value = higher priority)
         if (b.priority !== a.priority) {
             return b.priority - a.priority;
         }
+        // Secondary sort: _initialIndex (order in slaPriorities list, lower index = higher priority)
+        if (a._initialIndex !== b._initialIndex) {
+            return a._initialIndex - b._initialIndex;
+        }
+        // Tertiary sort: computed weight (higher weight = higher priority)
         const wa = computeActionWeight(a, rncValue, rncIsRed, currentStance);
         const wb = computeActionWeight(b, rncValue, rncIsRed, currentStance);
-        if (wb !== wa) {
-            return wb - wa;
-        }
-        return a._initialIndex - b._initialIndex;
+        return wb - wa;
     });
 
     const allValidActions = actionsAfterExclusivity;
