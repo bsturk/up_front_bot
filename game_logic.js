@@ -1461,45 +1461,16 @@ function handleTerrainAcceptanceCheck() {
     if (nonRejectableTerrain.includes(terrainType)) {
         accept = true;
         reason = "cannot be rejected";
-    } else if (terrainType === "Open Ground") {
-         terrainPlacementResult.innerHTML = `<strong>Error:</strong> Open Ground cannot be placed on an opponent this way.`;
-         terrainPlacementResult.className = 'instruction result-output status-stressed-severe';
-         if(concealResult) concealResult.textContent = '';
- 		 return;
-    }
+    } 
     else {
-        if (troopQuality === "Green") {
-            let rejectionChance = 0;
-            if (difficultTerrain.includes(terrainType)) {
-                rejectionChance = 0.50;
-                reason = `hesitates due to difficult/hazardous terrain (${terrainType})`;
-            } else if (coverTerrain.includes(terrainType)) {
-                rejectionChance = 0.15;
-                reason = `hesitates even at potential cover (${terrainType})`;
+        if (difficultTerrain.includes(terrainType)) {
+            const rejectionChance = 0.15;
+            const roll = Math.random();
+            if (roll < rejectionChance) {
+                accept = false;
             } else {
-                 accept = true;
-                 reason = `is not affected by Green hesitation for this terrain type (${terrainType})`;
+                accept = true;
             }
-
-            if (rejectionChance > 0) {
-                const roll = Math.random();
-                if (roll < rejectionChance) {
-                   accept = false;
-                } else {
-                    reason = reason.replace('hesitates', 'considered hesitating');
-                    const newTerrainIsBeneficial = (terrainType === 'Woods' || terrainType === 'Buildings');
-                    if (newTerrainIsBeneficial) {
-                         reason += " and accepts beneficial terrain.";
-                    } else if (coverTerrain.includes(terrainType)) {
-                         reason += " and accepts cover.";
-                    } else {
-                        reason += " and accepts the terrain.";
-                    }
-                }
-            }
-        } else {
-             accept = true;
-             reason = `does not reject placed terrain (Rule 7.32)`;
         }
     }
 
@@ -1507,7 +1478,7 @@ function handleTerrainAcceptanceCheck() {
         let acceptanceNote = `Place the ${terrainType} Terrain card on the ${"SLA Group"} stack. Discard cards underneath.`;
         if (terrainType === "Wire") acceptanceNote = `Place the Wire card on the ${"SLA Group"} stack. Discard cards underneath.`;
 
-        let resultText = `<strong>Result:</strong> ${"SLA Group"} ACCEPTS the ${terrainType}`;
+        let resultText = `<strong>Result:</strong> ${"SLA Group"} accepts the ${terrainType}`;
         if (reason) {
              resultText += ` (${reason}).`;
         } else {
@@ -1517,9 +1488,9 @@ function handleTerrainAcceptanceCheck() {
         terrainPlacementResult.innerHTML = resultText;
         terrainPlacementResult.className = 'instruction result-output status-effective-good';
     } else {
-        terrainPlacementResult.innerHTML = `<strong>Result:</strong> ${"SLA Group"} REFUSES the ${terrainType} (${reason}).`
-            + `<br><strong>Player Action Required (Rule 7.32):</strong>`
-            + `<br> 1. Change the ${"SLA Group"}'s current Movement card to **Sideways** mode (adjust range chit accordingly).`
+        terrainPlacementResult.innerHTML = `<strong>Result:</strong> ${"SLA Group"} rejects the ${terrainType}. This will require their Movement card to change to Sideways or be discarded.`
+            + `<br><strong>Player Action Required:</strong>`
+            + `<br> 1. Change the ${"SLA Group"}'s current Movement card to <b>Sideways</b> mode (adjust range chit accordingly).`
             + `<br> 2. If the ${"SLA Group"}'s Movement card was *already* Sideways, discard that Movement card instead.`
             + `<br> 3. Discard the refused ${terrainType} card.`
             + `<br><em>(The ${"SLA Group"} implicitly uses an action via the rejection consequence if movement changed/card discarded).</em>`;
@@ -1596,7 +1567,7 @@ function initializeGameLogic() {
          slaNationalitySelect.innerHTML = '<option value="">Error loading</option>';
     }
 
-    const terrainTypesForPlacement = ["Brush", "Woods", "Buildings", "Walls", "Gully", "Stream", "Marsh", "Wire", "Minefield", "Hill", "Pillbox", "Open Ground"];
+    const terrainTypesForPlacement = ["Brush", "Woods", "Buildings", "Walls", "Gully", "Stream", "Marsh", "Wire", "Minefield", "Hill", "Pillbox"];
     terrainPlacedSelect.innerHTML = '<option value="">-- Select Terrain --</option>';
     terrainTypesForPlacement.sort().forEach(type => {
         const option = document.createElement('option');
