@@ -1478,7 +1478,7 @@ function handleTerrainAcceptanceCheck() {
         let acceptanceNote = `Place the ${terrainType} Terrain card on the ${"SLA Group"} stack. Discard cards underneath.`;
         if (terrainType === "Wire") acceptanceNote = `Place the Wire card on the ${"SLA Group"} stack. Discard cards underneath.`;
 
-        let resultText = `<strong>Result:</strong> ${"SLA Group"} accepts the ${terrainType}`;
+        let resultText = `<strong>Result:</strong> ${"SLA Group"} accepts the ${terrainType} (unless a personality in the group is not allowed in that terrain)`;
         if (reason) {
              resultText += ` (${reason}).`;
         } else {
