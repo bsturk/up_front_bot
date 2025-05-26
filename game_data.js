@@ -35,6 +35,7 @@ const ACTIONS = {
     FIRE_OPP:              { text: "Fire (Opportunity)",        type: "Fire" },
     FIRE_INFILTRATE:       { text: "Fire (Infiltrate)",         type: "Fire" },
     FIX_WEAPON:            { text: "Fix Weapon",                type: "Misc" },
+    FORD_STREAM:           { text: "Ford Stream",               type: "Move" },
     HOLD:                  { text: "Hold / No Action",          type: "Hold" },
     INFILTRATE_MORALE:     { text: "Infiltrate (Morale Check)", type: "Move" },
     INFILTRATE_MOVE:       { text: "Infiltrate (Move Card)",    type: "Move" },
@@ -66,6 +67,7 @@ const CONDITIONS = {
     "HAS_TERRAIN_CARD": "Terrain card available",
     "IN_BENEFICIAL_TERRAIN": "In Beneficial Terrain",
     "IN_MINEFIELD": "In Minefield",
+    "IN_STREAM": "SLA Group is in Stream terrain",
     "IN_WIRE": "In Wire",
     "IS_ENCIRCLED": "Encircled",
     "IS_ENTRENCHED": "Entrenched",
@@ -294,6 +296,7 @@ const INSTRUCTIONS = {
     DISCARD_CARD_DRAW_ONE: "Discard 1 card of the specified type from the SLA hand.",
     DISCARD_NO_ACTION: "Choose not to take a Discard Action.",
     ATTEMPT_SNIPER_CHECK_DRAW_RNC: "Draw RNC.",
+    FORD_STREAM_ATTEMPT: "Play Movement card sideways. Ford card auto-succeeds. Non-Ford Movement card: Draw RNC (Black = Success).",
 };
 
 const POST_ACTION_INSTRUCTIONS = {
@@ -317,6 +320,7 @@ const POST_ACTION_INSTRUCTIONS = {
     INFILTRATION_ATTEMPT_MOVE: "Check RPN column under group size with modifiers. Success if number is red - place an Infiltration marker on target Player group.",
     END_DISCARD_PHASE: "The turn is over for the SLA player.",
     RESOLVE_SNIPER_CHECK_ATTEMPT: "If RNC black & > enemy sniper RNC, enemy sniper eliminated.  SLA actions are done as this is the sole action that can be taken.",
+    FORD_STREAM_RESULT: "Success: Card sideways on Stream, group moving. Fail: Discard card. (Note IG rules).",
 };
 
 const ACTION_DEFINITIONS = {
@@ -575,8 +579,16 @@ const ACTION_DEFINITIONS = {
         instructionKey: "INFILTRATE_PLAY_MOVE_CARD",
         postActionInstructionKey: "INFILTRATION_ATTEMPT_MOVE",
         displayTriggerTextKeys: ["HAS_MOVE_CARD", "PLAYER_AT_RR_5"]
-     },
-};
+         },
+     FORD_STREAM: {
+        text: ACTIONS.FORD_STREAM.text, type: ACTIONS.FORD_STREAM.type,
+        conditions: ["IN_STREAM", "HAS_MOVE_CARD", "!PINNED_ANY"],
+        targetingKey: "TARGET_OWN_GROUP",
+        instructionKey: "FORD_STREAM_ATTEMPT",
+        postActionInstructionKey: "FORD_STREAM_RESULT",
+        displayTriggerTextKeys: ["IN_STREAM", "HAS_MOVE_CARD"]
+    },
+    };
 
 const DISCARD_ACTION_DEFINITIONS = {
     DISCARD_TERRAIN_ON_ENEMY: {
@@ -615,6 +627,7 @@ const slaPriorities = {
     Line: {
         Effective: [
             { actionRef: "MOVE_OBJECTIVE",        rncCondition:   {},                                priority:  3 },
+            { actionRef: "FORD_STREAM",           rncCondition:   { red: "ANY" }                     priority:  3 },
             { actionRef: "FIRE_INFILTRATE",       rncCondition:   {},                                priority:  2 },
             { actionRef: "FIRE_HIGH_OPP",         rncCondition:   { black: ["0...1"] },              priority:  2 },
             { actionRef: "RALLY_ALL",             rncCondition:   {},                                priority:  0 },

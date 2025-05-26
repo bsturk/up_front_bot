@@ -302,6 +302,7 @@ const conditionCheckers = {
     "PINNED_OR_KIA_SL": (inputs) => inputs.slPinnedKIAInput?.checked ?? false,
     "IN_WIRE": (inputs) => inputs.inWireInput?.checked ?? false,
     "IN_MINEFIELD": (inputs) => inputs.terrainTypeSelect?.value === 'Minefield',
+    "IN_STREAM": (inputs) => inputs.terrainTypeSelect?.value === 'Stream',
     "IS_ENTRENCHED": (inputs) => inputs.isEntrenchedInput?.checked ?? false,
     "IS_INFILTRATED": (inputs) => inputs.isInfiltratedInput?.checked ?? false,
     "IS_INFILTRATING_ANY": (inputs) => inputs.isInfiltratingAnyInput?.checked ?? false,
