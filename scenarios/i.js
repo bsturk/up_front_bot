@@ -14,7 +14,7 @@ window.iData = {
   "america_cards_attacker": null,
   "russia_cards_attacker": null,
   "japan_cards_attacker": null,
-  "britian_cards_attacker": null,
+  "britain_cards_attacker": null,
   "france_cards_attacker": null,
   "italy_cards_attacker": null,
   "finland_cards_attacker": null,
@@ -22,7 +22,7 @@ window.iData = {
   "america_cards_defender": null,
   "russia_cards_defender": [ 1, 3, 4, 5, 6, 7, 8, 9, 10, 28 ], // Partisan Defender uses Russian cards
   "japan_cards_defender": null,
-  "britian_cards_defender": null,
+  "britain_cards_defender": null,
   "france_cards_defender": [ 1, 5, 6, 8, 9, 10, 11, 12, 27 ], // Partisan Defender uses French cards
   "italy_cards_defender": null,
   "finland_cards_defender": null

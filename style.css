@@ -783,11 +783,6 @@ hr {
     background-color: transparent;
     display: grid;
 }
- #gameContent .container > .section,
- #setupContent .container > .section,
- #utilContent .container > .section {
-
- }
 
 .loader {
     border: 4px solid #f3f3f3;
@@ -958,87 +953,4 @@ hr {
     margin: 0 auto 20px auto;
     max-width: 1400px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-.priority-item.priority-action {
-    border-color: #d9534f; /* Red border */
-    background-color: #f2dede !important; /* Light red background */
-    color: #a94442; /* Dark red text */
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(217, 83, 79, 0.3); /* Reddish shadow */
-}
-
-.priority-item.priority-action .action-type,
-.priority-item.priority-action strong,
-.priority-item.priority-action p {
-    color: #a94442 !important; /* Ensure text color is consistent */
-}
-
-.priority-item.priority-action-urgent {
-    border-color: #c9302c; /* Darker red border */
-    background-color: #ebcccc !important; /* Even lighter red */
-    color: #79171b; /* Even darker red text */
-     box-shadow: 0 2px 6px rgba(201, 48, 44, 0.4);
-}
-.priority-item.priority-action-urgent .action-type,
-.priority-item.priority-action-urgent strong,
-.priority-item.priority-action-urgent p {
-     color: #79171b !important;
-}
-
-.priority-item.priority-action-important {
-    border-color: #f0ad4e; /* Orange border */
-    background-color: #fcf8e3 !important; /* Light yellow background */
-    color: #8a6d3b; /* Brownish text */
-    box-shadow: 0 1px 4px rgba(240, 173, 78, 0.2);
-}
-.priority-item.priority-action-important .action-type,
-.priority-item.priority-action-important strong,
-.priority-item.priority-action-important p {
-     color: #8a6d3b !important;
-}
-
-
-/* Adjust targeting box colors for priority items */
-.priority-item.priority-action .action-targeting,
-.priority-item.selected-action.priority-action .action-targeting {
-    border-left-color: currentColor; /* Use the text color of the parent */
-    background-color: rgba(255, 255, 255, 0.7); /* Light transparent white */
-}
-
-.priority-item.priority-action .action-targeting strong,
-.priority-item.selected-action.priority-action .action-targeting strong {
-    color: currentColor !important; /* Inherit color */
-}
-
-.priority-item.priority-action .action-targeting ul li,
-.priority-item.selected-action.priority-action .action-targeting ul li {
-    border-bottom-color: rgba(0, 0, 0, 0.2); /* Darker dotted line */
-}
-
-/* When a priority item is selected, make sure it's still clear */
-.priority-item.selected-action.priority-action {
-     background-color: #d9534f !important; /* Base red selected background */
-     color: white; /* White text */
-     border-color: #c9302c; /* Darker red selected border */
-     box-shadow: 0 2px 6px rgba(201, 48, 44, 0.4);
-}
-
-.priority-item.selected-action.priority-action .action-type,
-.priority-item.selected-action.priority-action strong,
-.priority-item.selected-action.priority-action p {
-    color: white !important; /* White text for selected state */
-}
-
-.priority-item.selected-action.priority-action .action-targeting,
-.priority-item.selected-action.priority-action .action-targeting {
-    border-left-color: white; /* White border for selected state */
-	background-color: rgba(255, 255, 255, 0.7);
-}
-
-.priority-item.selected-action.priority-action .action-targeting strong {
-    color: #111 !important; /* Darker text for targeting title in selected state */
-}
-
-.priority-item.selected-action.priority-action .action-targeting ul li {
-     border-bottom-color: rgba(0, 0, 0, 0.3);
 }

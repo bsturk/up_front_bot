@@ -29,8 +29,6 @@ const nonMovingTerrains = ['Minefield', 'Stream', 'Marsh']; // Add others if nee
 const nonEntrenchingTerrains = ['Open Ground', 'Marsh', 'Stream', 'Pillbox', 'Minefield']; // Wire handled by checkbox
 const nonWireTerrains = ['Minefield', 'Stream', 'Marsh', 'Pillbox']; // Terrains where wire likely doesn't exist or apply
 
-isMovingInput, inWireInput, isEntrenchedInput;
-
 function requireNationalitySelected() {
     if (!slaNationalitySelect) {
         console.error("SLA Nationality select element not found during check.");
@@ -670,7 +668,7 @@ function updateSLAState() {
          };
 
          if (!Array.isArray(hydratedHold.displayTriggerTextKeys) || hydratedHold.displayTriggerTextKeys.length === 0) {
-             hydratedHold.displayTriggerTextKeys = [...hydatedHold.conditions];
+             hydratedHold.displayTriggerTextKeys = [...hydratedHold.conditions];
          }
          if (!Array.isArray(hydratedHold.targetingKey)) {
              hydratedHold.targetingKey = [hydratedHold.targetingKey || 'NONE'];
@@ -1558,9 +1556,6 @@ function initializeGameLogic() {
     discardActionSection = document.getElementById('discardActionSection');
     discardPriorityList = document.getElementById('discardPriorityList');
     discardActionsRemainingDisplay = document.getElementById('discardActionsRemainingDisplay');
-
-
-    allExclusionCheckboxes = {};
 
     const essentialElements = [
         pinnedCountInput, slPinnedKIAInput, inWireInput, isFlankedInput, isMovingInput, isFlankingInput,

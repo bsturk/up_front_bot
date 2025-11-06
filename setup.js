@@ -118,8 +118,8 @@ function initializeSetup() {
              'C': { personality_cards: [] }, 'D': { personality_cards: [] }
          };
          let num_groups = 3; let val = randint(0, 10);
-         if (g_bot_player.name === 'Germany' || g_bot_player.name === 'British') { val -= 1; }
-         else if (g_bot_player.name === 'Russia' || g_bot_player.name === 'Italian') { val += 1; }
+         if (g_bot_player.name === 'Germany' || g_bot_player.name === 'Britain') { val -= 1; }
+         else if (g_bot_player.name === 'Russia' || g_bot_player.name === 'Italy') { val += 1; }
          if (val <= 3) { num_groups = 2; } else if (val >= 8) { num_groups = 4; }
          log(`Initial random value: ${val}, Determined number of groups: ${num_groups}`);
 
