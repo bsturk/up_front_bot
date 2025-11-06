@@ -15,7 +15,7 @@ let activeScenarioFeatures = {
 
 let pinnedCountInput, slPinnedKIAInput, inWireInput, isFlankedInput, isMovingInput, isFlankingInput;
 let isEncircledInput, isEntrenchedInput, isInfiltratedInput, isInfiltratingAnyInput;
-let terrainTypeSelect;
+let terrainTypeSelect, playerNationalitySelect;
 let slaTroopQualitySelect, slaNationalitySelect, stanceSelect, statusDisplay, priorityList;
 let checkConcealButton, concealResult;
 let slaActionSection, rncSelector, rncNumbers, selectedRNCValueInput, terrainPlacedSelect, checkTerrainAcceptanceButton, terrainPlacementResult;
@@ -59,6 +59,28 @@ function updateSlaGroupReferences() {
     if (dynamicHint) dynamicHint.textContent = groupNameLong;
 }
 
+function playerHasVehicles() {
+    if (!playerNationalitySelect || !playerNationalitySelect.value) {
+        return false;
+    }
+
+    const playerNatName = playerNationalitySelect.value;
+    if (!window.loadedNationalityData || !window.loadedNationalityData[playerNatName]) {
+        return false;
+    }
+
+    const playerNationData = window.loadedNationalityData[playerNatName];
+    if (!playerNationData.units || !Array.isArray(playerNationData.units)) {
+        return false;
+    }
+
+    // Check if any unit has card_type of "Vehicle", "AFV", or "IG"
+    return playerNationData.units.some(unit => {
+        const cardType = unit.card_type || 'Man';
+        return cardType === 'Vehicle' || cardType === 'AFV' || cardType === 'IG';
+    });
+}
+
 function calculateStability() {
     let stability = 0;
     stability -= parseInt(pinnedCountInput?.value ?? '0');
@@ -71,14 +93,14 @@ function calculateStability() {
 
     if (isFlankingInput?.checked) stability += 2;
     if (isEntrenchedInput?.checked) stability += 2;
- 
+
     const selectedTerrain = terrainTypeSelect?.value;
     if (selectedTerrain === 'Minefield') {
         stability -= 2;
     } else if (selectedTerrain === 'Woods' || selectedTerrain === 'Buildings') {
         stability += 1;
     }
- 
+
     return stability;
 }
 
@@ -343,6 +365,7 @@ const conditionCheckers = {
     "IS_JAPANESE": (inputs, stance, nationality) => nationality === NATIONS.JAPANESE,
     "HAS_VICTORY_LOCATION": () => activeScenarioFeatures.HAS_VICTORY_LOCATION,
     "HAS_VICTORY_POINTS": () => activeScenarioFeatures.HAS_VICTORY_POINTS,
+    "PLAYER_HAS_VEHICLE": () => playerHasVehicles(),
 };
 
 function processActiveScenarioVictoryConditions(scenarioName) {
@@ -1505,6 +1528,7 @@ function initializeGameLogic() {
 
     pinnedCountInput = document.getElementById('pinnedCount');
     slPinnedKIAInput = document.getElementById('slPinnedKIA');
+    playerNationalitySelect = document.getElementById('playerNationality');
     inWireInput = document.getElementById('inWire');
     isFlankedInput = document.getElementById('isFlanked');
     isMovingInput = document.getElementById('isMoving');
@@ -1555,17 +1579,24 @@ function initializeGameLogic() {
 
     if (typeof window.loadedNationalityData !== 'undefined') {
         slaNationalitySelect.innerHTML = '<option value="">-- Select --</option>';
+        playerNationalitySelect.innerHTML = '<option value="">-- Select --</option>';
         Object.keys(window.loadedNationalityData).sort().forEach(natName => {
              if (Object.hasOwnProperty.call(window.loadedNationalityData, natName)) {
-                 const option = document.createElement('option');
-                 option.value = natName;
-                 option.textContent = natName;
-                 slaNationalitySelect.appendChild(option);
+                 const slaOption = document.createElement('option');
+                 slaOption.value = natName;
+                 slaOption.textContent = natName;
+                 slaNationalitySelect.appendChild(slaOption);
+
+                 const playerOption = document.createElement('option');
+                 playerOption.value = natName;
+                 playerOption.textContent = natName;
+                 playerNationalitySelect.appendChild(playerOption);
              }
         });
     } else {
          console.error("Nationality data (loadedNationalityData) not found.");
          slaNationalitySelect.innerHTML = '<option value="">Error loading</option>';
+         playerNationalitySelect.innerHTML = '<option value="">Error loading</option>';
     }
 
     const terrainTypesForPlacement = ["Brush", "Woods", "Buildings", "Walls", "Gully", "Stream", "Marsh", "Wire", "Minefield", "Hill", "Pillbox"];
