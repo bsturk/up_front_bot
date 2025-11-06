@@ -46,6 +46,8 @@ const ACTIONS = {
     MOVE_FLANK:            { text: "Move Sideways (Flank)",     type: "Move" },
     MOVE_SIDEWAYS:         { text: "Move (Sideways)",           type: "Move" },
     MOVE_RETREAT:          { text: "Move (Retreat)",            type: "Move" },
+    MOVE_EXIT_MARSH:       { text: "Exit Marsh",                type: "Move" },
+    MOVE_MARSH_FIRST:      { text: "Move in Marsh (First)",     type: "Move" },
     PLACE_TERRAIN_SELF:    { text: "Place Terrain (Self)",      type: "Terrain" },
     RALLY_ALL:             { text: "Rally All",                 type: "Rally" },
     RALLY_NUM:             { text: "Rally #",                   type: "Rally" },
@@ -79,6 +81,7 @@ const CONDITIONS = {
     "NEEDS_CREW_OR_CREW_PINNED": "Possessed weapon needs crew OR designated crewman is Pinned",
     "OBJECTIVE_IN_RANGE": "Scenario has specific range for victory and an SLA group is 1 away",
     "PINNED_ANY": "Any Pinned personalities in SLA group",
+    "PINNED_MULTIPLE": "Multiple (2+) Pinned personalities in SLA group",
     "PINNED_LEADER": "SL/ASL Pinned/KIA",
     "UNPINNED_ANY": "Any Unpinned personalities in SLA group",
     "SLA_NO_PINNED_PERSONALITIES": "SLA Group has no Pinned personalities",
@@ -88,10 +91,23 @@ const CONDITIONS = {
     "SITUATIONAL_PLAYER_JUDGEMENT": "Situational (Player judgement)",
     "SNIPER_CARDS_ARE_NOT_COWER": "Sniper cards are not Cower cards",
     "WEAPON_MALFUNCTIONED_ANY": "Any current SLA Group weapon malfunctioned",
+    "HAS_AFV": "SLA Group has AFV/assault gun",
+    "FACING_AFV": "Enemy group has AFV/assault gun",
+    "HAS_AT_WEAPON": "Has anti-tank capable weapon (ATR/Bazooka/PF)",
     "IS_JAPANESE": "Nationality is Japanese",
     "HAS_VICTORY_LOCATION": "Victory condition(s) involve a 'Location'",
     "HAS_VICTORY_POINTS": "Victory condition(s) require Victory Points",
     "PLAYER_HAS_VEHICLE": "Player has Vehicle/AFV in their OOB",
+    "IN_MARSH": "In Marsh terrain",
+    "CAN_EXIT_MARSH": "Group has played sideways move (first marsh move done)",
+    "CAN_FORD_STREAM": "Movement card is Ford or will require RNC check",
+    "IN_RESTRICTIVE_TERRAIN": "In Marsh, Stream, or Wire",
+    "MARSH_FIRST_MOVE_DONE": "First marsh move completed",
+    "READY_TO_EXIT_MARSH": "Ready to exit marsh (1+ moves done)",
+    "HAS_FORD_CARD": "Has movement card with 'Ford' keyword",
+    "HAS_MALFUNCTIONED_WEAPON": "Group has malfunctioned weapon this turn",
+    "TARGET_CAN_BE_ELIMINATED": "Target group could be eliminated this turn",
+    "TARGET_NEAR_OBJECTIVE": "Target threatens victory location",
 };
 
 const TARGET_CRITERIA = {
@@ -99,6 +115,13 @@ const TARGET_CRITERIA = {
     IS_IN_OPEN: { desc: "In Open Ground" },
     IS_MOVING: { desc: "Moving" },
     IS_INFILTRATED_BY_SLA: { desc: "Infiltrated by this SLA Group" },
+    IS_ENCIRCLED: { desc: "Encircled (all fire gets flanking bonus)" },
+    TARGET_NEAR_OBJECTIVE: { desc: "Target threatens victory location" },
+    TARGET_CAN_BE_ELIMINATED: { desc: "Fire could eliminate group this turn" },
+    TARGET_IS_ISOLATED: { desc: "Target has no adjacent support" },
+    TARGET_HAS_LOW_MORALE: { desc: "Target group mostly pinned/panicked" },
+    TARGET_IS_LAST_GROUP: { desc: "Target is enemy's last group" },
+    TARGET_THREATENING_INFILTRATION: { desc: "Target positioned to infiltrate" },
     HAS_LEADER: { desc: "Has SL/ASL" },
     HAS_UNPINNED_LEADER: { desc: "Has Unpinned SL/ASL" },
     HAS_SPEC_WEAPON_MG: { desc: "Has MG" },
@@ -152,7 +175,7 @@ const TARGETING = {
     NONE: null,
     FIRE_AGG_EFF_HIGH_OPP: {
         title: "Target Group:",
-        criteria: [ TARGET_CRITERIA.HAS_LEADER, TARGET_CRITERIA.HAS_SPEC_WEAPON_MG, TARGET_CRITERIA.HAS_SPEC_WEAPON_AT, TARGET_CRITERIA.IS_AFV, TARGET_CRITERIA.IS_FLANKED_BY_SLA, TARGET_CRITERIA.AT_RR_X(5), TARGET_CRITERIA.IS_MOVING, TARGET_CRITERIA.IS_IN_OPEN, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.LOWEST_GROUP_ID ]
+        criteria: [ TARGET_CRITERIA.IS_ENCIRCLED, TARGET_CRITERIA.TARGET_CAN_BE_ELIMINATED, TARGET_CRITERIA.TARGET_NEAR_OBJECTIVE, TARGET_CRITERIA.HAS_LEADER, TARGET_CRITERIA.HAS_SPEC_WEAPON_MG, TARGET_CRITERIA.HAS_SPEC_WEAPON_AT, TARGET_CRITERIA.IS_AFV, TARGET_CRITERIA.IS_FLANKED_BY_SLA, TARGET_CRITERIA.AT_RR_X(5), TARGET_CRITERIA.IS_MOVING, TARGET_CRITERIA.IS_IN_OPEN, TARGET_CRITERIA.TARGET_HAS_LOW_MORALE, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     FIRE_AGG_STR_THREAT: {
         title: "Target Group:",
@@ -216,7 +239,7 @@ const TARGETING = {
     },
     MOVE_DIR_SIDEWAYS: {
         title: "Movement Direction:",
-        description: { desc: ["Sideays."] }
+        description: { desc: ["Sideways."] }
     },
     MOVE_DIR_FLANK_HIGHEST_THREAT: {
         title: "Movement Direction:",
@@ -234,6 +257,10 @@ const TARGETING = {
         title: "Target:",
         description: { desc: ["All pinned personalities in this group."] }
     },
+    TARGET_RALLY_PRIORITY: {
+        title: "Target Pinned:",
+        criteria: [ RALLY_TARGET_CRITERIA.IS_SL, RALLY_TARGET_CRITERIA.IS_ASL, RALLY_TARGET_CRITERIA.IS_CREW, RALLY_TARGET_CRITERIA.HAS_HIGHEST_FP, RALLY_TARGET_CRITERIA.HAS_HIGHEST_MORALE, RALLY_TARGET_CRITERIA.HAS_LOWEST_ID ]
+    },
     TARGET_CREWMAN_NEEDED: {
         title: "Target Personality:",
         description: { desc: ["Specific crewman needed for weapon."] }
@@ -248,7 +275,7 @@ const TARGETING = {
     },
     TARGET_ENEMY_GROUP_SNIPER: {
         title: "Target Group:",
-        criteria: [ TARGET_CRITERIA.HAS_LEADER, TARGET_CRITERIA.LOWEST_PINNED_COUNT, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.LOWEST_GROUP_ID ]
+        criteria: [ TARGET_CRITERIA.HAS_UNPINNED_LEADER, TARGET_CRITERIA.HAS_LEADER, TARGET_CRITERIA.TARGET_NEAR_OBJECTIVE, TARGET_CRITERIA.LOWEST_PINNED_COUNT, TARGET_CRITERIA.HIGHEST_FP_TOTAL, TARGET_CRITERIA.CLOSEST_RR, TARGET_CRITERIA.LOWEST_GROUP_ID ]
     },
     TARGET_ENEMY_GROUP_MOVING: {
         title: "Target Moving Group:",
@@ -327,11 +354,11 @@ const POST_ACTION_INSTRUCTIONS = {
 const ACTION_DEFINITIONS = {
     RALLY_ALL: {
         text: ACTIONS.RALLY_ALL.text, type: ACTIONS.RALLY_ALL.type,
-        conditions: ["PINNED_ANY", "HAS_RALLY_ALL_CARD"],
+        conditions: ["PINNED_MULTIPLE", "HAS_RALLY_ALL_CARD"],
         targetingKey: "TARGET_ALL_PINNED_IN_GROUP",
         instructionKey: "RALLY_ALL",
         postActionInstructionKey: "DISCARD_RALLY_ALL_DRAW",
-        displayTriggerTextKeys: ["PINNED_ANY", "HAS_RALLY_ALL_CARD"]
+        displayTriggerTextKeys: ["PINNED_MULTIPLE", "HAS_RALLY_ALL_CARD"]
     },
     RALLY_NUM: {
         text: ACTIONS.RALLY_NUM.text, type: ACTIONS.RALLY_NUM.type,
@@ -489,7 +516,8 @@ const ACTION_DEFINITIONS = {
         targetingKey: "TARGET_WEAPON",
         instructionKey: "DRAW_RNC",
         postActionInstructionKey: "FIX_WEAPON_RESULT",
-        displayTriggerTextKeys: ["WEAPON_MALFUNCTIONED_ANY"]
+        displayTriggerTextKeys: ["WEAPON_MALFUNCTIONED_ANY"],
+        note: "For ordnance/AFV weapons, check special repair requirements"
     },
     ACQUIRE_WEAPON: {
         text: ACTIONS.ACQUIRE_WEAPON.text, type: ACTIONS.ACQUIRE_WEAPON.type,
@@ -509,11 +537,11 @@ const ACTION_DEFINITIONS = {
     },
     TRANSFER_IND: {
         text: ACTIONS.TRANSFER_IND.text, type: ACTIONS.TRANSFER_IND.type,
-        conditions: ["SITUATIONAL_PLAYER_JUDGEMENT"],
+        conditions: ["SITUATIONAL_PLAYER_JUDGEMENT", "!IS_ENCIRCLED"],
         targetingKey: "TARGET_ADJ_GROUP_LOWEST_ID",
         instructionKey: "TRANSFER_PLAY_MOVE_DISCARD",
         postActionInstructionKey: "TRANSFER_IND_RESULT",
-        displayTriggerTextKeys: ["SITUATIONAL_PLAYER_JUDGEMENT"]
+        displayTriggerTextKeys: ["SITUATIONAL_PLAYER_JUDGEMENT", "!IS_ENCIRCLED"]
     },
     BANZAI: {
         text: ACTIONS.BANZAI.text, type: ACTIONS.BANZAI.type,
@@ -591,6 +619,26 @@ const ACTION_DEFINITIONS = {
         postActionInstructionKey: "FORD_STREAM_RESULT",
         displayTriggerTextKeys: ["IN_STREAM", "HAS_MOVE_CARD"]
     },
+    MOVE_MARSH_FIRST: {
+        text: ACTIONS.MOVE_MARSH_FIRST.text, type: ACTIONS.MOVE_MARSH_FIRST.type,
+        conditions: ["IN_MARSH", "HAS_MOVE_CARD", "!PINNED_ANY", "!MARSH_FIRST_MOVE_DONE"],
+        targetingKey: "MOVE_DIR_SIDEWAYS",
+        instructionKey: "MOVE_PLAYER_CHOICE_SIDE",
+        postActionInstructionKey: "DISCARD_MOVE_DRAW",
+        displayTriggerTextKeys: ["IN_MARSH", "HAS_MOVE_CARD"],
+        exclusivityGroup: "MOVE_PRIMARY",
+        priorityInGroup: 8
+    },
+    MOVE_EXIT_MARSH: {
+        text: ACTIONS.MOVE_EXIT_MARSH.text, type: ACTIONS.MOVE_EXIT_MARSH.type,
+        conditions: ["IN_MARSH", "HAS_MOVE_CARD", "!PINNED_ANY", "READY_TO_EXIT_MARSH"],
+        targetingKey: "MOVE_DIR_ADVANCE",
+        instructionKey: "MOVE_PLAYER_CHOICE_ADVANCE",
+        postActionInstructionKey: "DISCARD_MOVE_DRAW",
+        displayTriggerTextKeys: ["IN_MARSH", "READY_TO_EXIT_MARSH"],
+        exclusivityGroup: "MOVE_PRIMARY",
+        priorityInGroup: 9
+    },
     };
 
 const DISCARD_ACTION_DEFINITIONS = {
@@ -631,6 +679,8 @@ const slaPriorities = {
         Effective: [
             { actionRef: "MOVE_OBJECTIVE",        rncCondition:   {},                                   priority:  3 },
             { actionRef: "FORD_STREAM",           rncCondition:   { red: "ANY" },                       priority:  3 },
+            { actionRef: "MOVE_EXIT_MARSH",       rncCondition:   {},                                   priority:  3 },
+            { actionRef: "MOVE_MARSH_FIRST",      rncCondition:   {},                                   priority:  3 },
             { actionRef: "FIRE_INFILTRATE",       rncCondition:   {},                                   priority:  2 },
             { actionRef: "FIRE_HIGH_OPP",         rncCondition:   { black: ["0...1"] },                 priority:  2 },
             { actionRef: "RALLY_ALL",             rncCondition:   {},                                   priority:  0 },
@@ -655,6 +705,8 @@ const slaPriorities = {
         Stressed: [                                                                                     
             { actionRef: "BANZAI",                rncCondition:   {},                                   priority:  3 },
             { actionRef: "REMOVE_WIRE",           rncCondition:   {},                                   priority:  2 },
+            { actionRef: "MOVE_EXIT_MARSH",       rncCondition:   {},                                   priority:  2 },
+            { actionRef: "MOVE_MARSH_FIRST",      rncCondition:   {},                                   priority:  2 },
             { actionRef: "REMOVE_MINEFIELD",      rncCondition:   {},                                   priority:  1 },
             { actionRef: "EXIT_MINEFIELD",        rncCondition:   {},                                   priority:  0 },
             { actionRef: "RALLY_ALL",             rncCondition:   {},                                   priority:  0 },

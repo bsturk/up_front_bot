@@ -5,6 +5,19 @@ window.japanData = {
   "discard_condition_no_action": true,
   "notes": "May discard up to 2 cards on Player.",
   "broken_squad": 75,
+  "nationalTactics": {
+    "priorityModifiers": {
+      "BANZAI": 2.0,               // Signature tactic
+      "INFILTRATE_MORALE": 1.3,    // Stealth tactics
+      "INFILTRATE_MOVE": 1.2,      // Night fighting
+      "MOVE_ADVANCE": 1.2,         // Aggressive spirit
+      "ENTRENCH": 0.7,             // Less static defense
+      "MOVE_RETREAT": 0.5,         // Never retreat
+      "FIRE_INFILTRATE": 1.3,      // Surprise attacks
+      "LAY_SMOKE": 1.1             // Concealment tactics
+    },
+    "description": "Japanese tactics emphasize Banzai charges, infiltration, and refusal to retreat."
+  },
   "units": [
     {
       "num": 1,

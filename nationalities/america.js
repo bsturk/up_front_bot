@@ -5,6 +5,18 @@ window.americaData = {
   "discard_condition_no_action": true,
   "notes": "May discard up to 2 cards on Player.",
   "broken_squad": 50,
+  "nationalTactics": {
+    "priorityModifiers": {
+      "FIRE_OPP": 1.1,             // Firepower doctrine
+      "FIRE_HIGH_OPP": 1.2,        // Superior equipment
+      "RALLY_ALL": 1.1,            // Good morale
+      "MOVE_CAUTIOUS": 1.1,        // Combined arms advance
+      "LAY_SMOKE": 1.2,            // Smoke tactics
+      "FIX_WEAPON": 1.2,           // Equipment reliability
+      "ACQUIRE_WEAPON": 1.1        // Weapon flexibility
+    },
+    "description": "American tactics emphasize firepower superiority, careful advances with smoke, and equipment maintenance."
+  },
   "units": [
     {
       "num": 1,

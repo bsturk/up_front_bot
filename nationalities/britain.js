@@ -5,6 +5,17 @@ window.britainData = {
   "discard_condition_no_action": true,
   "notes": "May discard up to 2 cards on Player.",
   "broken_squad": 50,
+  "nationalTactics": {
+    "priorityModifiers": {
+      "FIRE_DEF": 1.2,             // Defensive fire doctrine
+      "ENTRENCH": 1.2,             // Prepared positions
+      "RALLY_ALL": 1.1,            // Stiff upper lip
+      "MOVE_CAUTIOUS": 1.2,        // Methodical advance
+      "PLACE_TERRAIN_SELF": 1.1,   // Terrain usage
+      "LAY_SMOKE": 1.1             // Tactical smoke
+    },
+    "description": "British tactics emphasize defensive positions, methodical advances, and maintaining morale."
+  },
   "units": [
     {
       "num": 1,

@@ -5,6 +5,17 @@ window.germanyData = {
   "discard_condition_no_action": false,
   "notes": "May discard up to 1 card on Player.",
   "broken_squad": 50,
+  "nationalTactics": {
+    "priorityModifiers": {
+      "FIRE_HIGH_OPP": 1.2,        // Germans love their MGs
+      "FIRE_OPP": 1.1,             // General fire preference
+      "ENTRENCH": 1.1,             // Defensive mindset
+      "RALLY_ALL": 1.3,            // Maintain command structure
+      "RALLY_NUM": 1.2,            // Leadership focus
+      "FIX_WEAPON": 1.1            // Equipment maintenance
+    },
+    "description": "German tactics emphasize superior firepower, defensive positions, and maintaining command structure."
+  },
   "units": [
     {
       "id": -1,

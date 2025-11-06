@@ -5,6 +5,19 @@ window.russiaData = {
   "discard_condition_no_action": true,
   "notes": "May discard any number of cards on Player.",
   "broken_squad": 50,
+  "nationalTactics": {
+    "priorityModifiers": {
+      "MOVE_ADVANCE": 1.3,         // Aggressive advance
+      "FIRE_CLOSE_THREAT": 1.2,    // Close combat preference
+      "FIRE_INFILTRATE": 1.2,      // Infiltration tactics
+      "RALLY_ALL": 0.8,            // Less rally focused
+      "RALLY_NUM": 0.8,            // Accept casualties
+      "ENTRENCH": 0.7,             // Less static
+      "INFILTRATE_MORALE": 1.3,    // Willing to take risks
+      "INFILTRATE_MOVE": 1.2       // Infiltration emphasis
+    },
+    "description": "Russian tactics emphasize aggressive advances, infiltration, and acceptance of casualties for objectives."
+  },
   "units": [
     {
       "num": 1,

@@ -3,7 +3,21 @@ let slaGroupState = {
     maxDiscardActions: 0,
     discardsTaken: 0,
     selectedNationalityData: null,
-    currentPhase: 'main' // 'main', 'discard', 'done'
+    currentPhase: 'main', // 'main', 'discard', 'done'
+    // Turn-scoped combat memory (cleared each turn)
+    turnMemory: {
+        malfunctionedPositions: [],  // Positions with malfunctions this turn
+        firedAt: {},                 // Group ID -> true mapping
+        receivedFire: false,         // If this group was fired upon
+        combatIntensity: 0          // 0-3 scale for stress
+    },
+    // Multi-phase terrain tracking (persists between turns)
+    terrainProgress: {
+        marsh: { movesCompleted: 0 },      // 0, 1, or 2
+        stream: { fordAttempts: 0 },       // Track failed attempts
+        minefield: { exitProgress: 0 },    // Similar to marsh
+        lastTerrainAction: null            // For continuation
+    }
 };
 
 let activeScenarioFeatures = {
@@ -318,6 +332,7 @@ const conditionCheckers = {
     "PINNED_GT1": (inputs) => parseInt(inputs.pinnedCountInput?.value ?? '0') > 1,
     "PINNED_LEADER": (inputs) => inputs.slPinnedKIAInput?.checked ?? false,
     "PINNED_ANY": (inputs) => parseInt(inputs.pinnedCountInput?.value ?? '0') > 0,
+    "PINNED_MULTIPLE": (inputs) => parseInt(inputs.pinnedCountInput?.value ?? '0') > 1,
     "SLA_NO_PINNED_PERSONALITIES": (inputs) => (parseInt(inputs.pinnedCountInput?.value ?? '0') === 0),
     "PINNED_OR_KIA_SL": (inputs) => inputs.slPinnedKIAInput?.checked ?? false,
     "IN_WIRE": (inputs) => inputs.inWireInput?.checked ?? false,
@@ -351,6 +366,9 @@ const conditionCheckers = {
     "WAS_TARGETED_BY_SNIPER_LAST_TURN": () => true,
     "WEAPON_MALFUNCTIONED_ANY": () => true,
     "WEAPON_MALFUNCTIONED_PRIMARY": () => true,
+    "HAS_AFV": () => true, // Player tracks if group has AFV
+    "FACING_AFV": () => true, // Player identifies enemy AFVs
+    "HAS_AT_WEAPON": () => true, // Player checks for AT weapons
     "IS_ATTACKER": (inputs, stance) => stance === "attacker" || stance === "Default",
     "IS_DEFENDER": (inputs, stance) => stance === "defender" || stance === "Default",
     "IN_ENTRENCHMENT_TERRAIN": (inputs) => {
@@ -364,6 +382,28 @@ const conditionCheckers = {
     "HAS_VICTORY_LOCATION": () => activeScenarioFeatures.HAS_VICTORY_LOCATION,
     "HAS_VICTORY_POINTS": () => activeScenarioFeatures.HAS_VICTORY_POINTS,
     "PLAYER_HAS_VEHICLE": () => playerHasVehicles(),
+    "IN_MARSH": (inputs) => inputs.terrainTypeSelect?.value === 'Marsh',
+    "CAN_EXIT_MARSH": () => slaGroupState.terrainProgress.marsh.movesCompleted >= 1,
+    "CAN_FORD_STREAM": () => true, // Player will check if Ford card or do RNC
+    "IN_RESTRICTIVE_TERRAIN": (inputs) => {
+        const terrain = inputs.terrainTypeSelect?.value;
+        return terrain === 'Marsh' || terrain === 'Stream' || inputs.inWireInput?.checked;
+    },
+    "MARSH_FIRST_MOVE_DONE": () => slaGroupState.terrainProgress.marsh.movesCompleted === 1,
+    "READY_TO_EXIT_MARSH": () => slaGroupState.terrainProgress.marsh.movesCompleted >= 1,
+    "HAS_FORD_CARD": () => true, // Player checks their card
+    "HAS_MALFUNCTIONED_WEAPON": () => slaGroupState.turnMemory.malfunctionedPositions.length > 0,
+    "TARGET_CAN_BE_ELIMINATED": () => true, // Would need game state to calculate
+    "TARGET_NEAR_OBJECTIVE": () => activeScenarioFeatures.HAS_VICTORY_LOCATION,
+    "OBJECTIVE_IN_RANGE": () => {
+        // Check if scenario has location-based victory and we're close
+        if (activeScenarioFeatures.HAS_VICTORY_LOCATION && activeScenarioFeatures.LOCATION_CONTEXT) {
+            // This would need actual range checking logic
+            // For now, assume true if has location victory
+            return true;
+        }
+        return false;
+    },
 };
 
 function processActiveScenarioVictoryConditions(scenarioName) {
@@ -426,6 +466,90 @@ function computeActionWeight(action, rncValue, rncIsRed, stance) {
 
     if (action.bias !== undefined) {
          w += action.bias;
+    }
+
+    // Malfunction risk awareness for fire actions
+    if (action.type === 'Fire' && slaGroupState.turnMemory.malfunctionedPositions.length > 0) {
+        // Reduce weight based on number of malfunctions already this turn
+        const malfunctionPenalty = slaGroupState.turnMemory.malfunctionedPositions.length * 0.5;
+        w -= malfunctionPenalty;
+    }
+
+    // Combat intensity awareness
+    if (slaGroupState.turnMemory.combatIntensity > 2 && action.type === 'Rally') {
+        // Increase rally priority when under heavy fire
+        w += 1;
+    }
+
+    // Apply nationality-specific tactical modifiers
+    if (slaGroupState.selectedNationalityData && 
+        slaGroupState.selectedNationalityData.nationalTactics && 
+        slaGroupState.selectedNationalityData.nationalTactics.priorityModifiers) {
+        
+        const tacticalModifiers = slaGroupState.selectedNationalityData.nationalTactics.priorityModifiers;
+        const actionKey = action.actionKey;
+        
+        if (tacticalModifiers[actionKey] !== undefined) {
+            // Apply multiplier to current weight
+            w = w * tacticalModifiers[actionKey];
+        }
+    }
+
+    // Victory condition awareness
+    if (activeScenarioFeatures.HAS_VICTORY_LOCATION) {
+        // Increase weight for objective-focused actions
+        if (action.actionKey === 'MOVE_OBJECTIVE' || action.actionKey === 'MOVE_ADVANCE') {
+            // Assume we're getting closer to objective
+            w += 2;
+        }
+        if (action.type === 'Fire' && action.targetingKey && 
+            (action.targetingKey.includes('TARGET_NEAR_OBJECTIVE') || 
+             action.targetingKey.includes('FIRE_AGG_EFF_HIGH_OPP'))) {
+            // Fire at enemies blocking objective
+            w += 1.5;
+        }
+    }
+    
+    // AFV/AT weapon tactical adjustments
+    if (action.type === 'Fire') {
+        // When facing AFVs without AT weapons, reduce fire priority
+        if (conditionCheckers["FACING_AFV"]() && !conditionCheckers["HAS_AT_WEAPON"]()) {
+            w -= 2; // Discourage ineffective fire
+        }
+        // When having AT weapons and facing AFVs, increase fire priority
+        if (conditionCheckers["FACING_AFV"]() && conditionCheckers["HAS_AT_WEAPON"]()) {
+            w += 2; // Prioritize AT fire
+        }
+    }
+    
+    // AFV movement considerations
+    if (action.type === 'Move' && conditionCheckers["HAS_AFV"]()) {
+        // AFVs should be more cautious about terrain
+        if (action.actionKey === 'MOVE_ADVANCE' || action.actionKey === 'MOVE_CAUTIOUS') {
+            w -= 0.5; // Slightly reduce due to bog risk
+        }
+    }
+    
+    // Encirclement considerations
+    if (conditionCheckers["IS_ENCIRCLED"](currentStateInputs)) {
+        // When encircled, rally and movement become more critical
+        if (action.type === 'Rally') {
+            w += 2; // Desperate need to rally (panic values are worse)
+        }
+        if (action.type === 'Move' && action.actionKey === 'MOVE_RETREAT') {
+            w += 1.5; // Try to break encirclement
+        }
+        // Note: Transfer actions already blocked by condition
+    }
+    
+    if (activeScenarioFeatures.HAS_VICTORY_POINTS) {
+        // VP scenarios reward aggression and enemy elimination
+        if (action.type === 'Fire') {
+            w += 0.5; // Slight bonus to all fire actions
+        }
+        if (action.actionKey === 'MOVE_ADVANCE') {
+            w += 1; // Aggression points for range
+        }
     }
 
     return w;
@@ -523,6 +647,12 @@ function applyExclusivityFilter(actions) {
 //
 
 function updateSLAState() {
+    // Check if we're starting a new turn (coming from 'done' phase)
+    if (slaGroupState.currentPhase === 'done') {
+        clearTurnMemory();
+        slaGroupState.currentPhase = 'main';
+    }
+    
     if (!requireNationalitySelected()) {
         if (priorityList) priorityList.innerHTML = '<div>(Select Nationality and Calculate Status)</div>';
         if (slaActionSection) slaActionSection.style.display = 'none';
@@ -862,6 +992,12 @@ function updateSLAState() {
                 }
 
                 slaGroupState.lastActionTaken = actionKey;
+                
+                // Update terrain progress for marsh/stream actions
+                const currentTerrain = terrainTypeSelect?.value;
+                if (currentTerrain) {
+                    updateTerrainProgress(actionKey, currentTerrain);
+                }
 
                 const postActionDetailsDiv = document.createElement('div');
                 postActionDetailsDiv.classList.add('post-action-details', 'result-output');
@@ -989,6 +1125,12 @@ function updateSLAState() {
                  }
 
                  slaGroupState.lastActionTaken = actionKey;
+                 
+                 // Update terrain progress for marsh/stream actions
+                 const currentTerrain = terrainTypeSelect?.value;
+                 if (currentTerrain) {
+                     updateTerrainProgress(actionKey, currentTerrain);
+                 }
 
                  const postActionDetailsDiv = document.createElement('div');
                  postActionDetailsDiv.classList.add('post-action-details', 'result-output');
@@ -1830,3 +1972,55 @@ if (document.readyState === 'interactive' || document.readyState === 'complete')
          window.gameLogicInitialized = true;
      }
 }
+
+// Turn memory management functions
+function clearTurnMemory() {
+    slaGroupState.turnMemory = {
+        malfunctionedPositions: [],
+        firedAt: {},
+        receivedFire: false,
+        combatIntensity: 0
+    };
+}
+
+// Terrain progress management functions
+function updateTerrainProgress(actionKey, terrainType) {
+    // Update marsh progress
+    if (terrainType === 'Marsh') {
+        if (actionKey === 'MOVE_MARSH_FIRST') {
+            slaGroupState.terrainProgress.marsh.movesCompleted = 1;
+        } else if (actionKey === 'MOVE_EXIT_MARSH') {
+            slaGroupState.terrainProgress.marsh.movesCompleted = 0; // Reset after exiting
+        }
+    }
+    
+    // Update stream ford attempts
+    if (terrainType === 'Stream' && actionKey === 'FORD_STREAM') {
+        slaGroupState.terrainProgress.stream.fordAttempts++;
+    }
+    
+    // Store last terrain action
+    slaGroupState.terrainProgress.lastTerrainAction = actionKey;
+}
+
+// Function to notify bot of malfunction (called by player after drawing RNC)
+function reportMalfunction(position) {
+    if (!slaGroupState.turnMemory.malfunctionedPositions.includes(position)) {
+        slaGroupState.turnMemory.malfunctionedPositions.push(position);
+    }
+}
+
+// Function to update combat intensity (called when group receives fire)
+function reportIncomingFire(intensity = 1) {
+    slaGroupState.turnMemory.receivedFire = true;
+    slaGroupState.turnMemory.combatIntensity = Math.min(3, slaGroupState.turnMemory.combatIntensity + intensity);
+}
+
+// Export functions for external use
+window.upFrontBot = {
+    reportMalfunction: reportMalfunction,
+    reportIncomingFire: reportIncomingFire,
+    clearTurnMemory: clearTurnMemory,
+    getTerrainProgress: () => slaGroupState.terrainProgress,
+    getTurnMemory: () => slaGroupState.turnMemory
+};
