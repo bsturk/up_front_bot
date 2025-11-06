@@ -13,7 +13,7 @@ window.pData = {
   "america_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
   "russia_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ],
   "japan_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ],
-  "britian_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
+  "britain_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
   "france_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
   "italy_cards_attacker": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 ],
   "finland_cards_attacker": null,
@@ -21,7 +21,7 @@ window.pData = {
   "america_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
   "russia_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ],
   "japan_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ],
-  "britian_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
+  "britain_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ],
   "france_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ],
   "italy_cards_defender": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 ],
   "finland_cards_defender": null

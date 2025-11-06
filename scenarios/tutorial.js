@@ -37,7 +37,7 @@ window.tutorialData = {
   ],
   "russia_cards_attacker": null,
   "japan_cards_attacker": null,
-  "britian_cards_attacker": null,
+  "britain_cards_attacker": null,
   "france_cards_attacker": null,
   "italy_cards_attacker": null,
   "finland_cards_attacker": null,
@@ -45,7 +45,7 @@ window.tutorialData = {
   "america_cards_defender": null,
   "russia_cards_defender": null,
   "japan_cards_defender": null,
-  "britian_cards_defender": null,
+  "britain_cards_defender": null,
   "france_cards_defender": null,
   "italy_cards_defender": null,
   "finland_cards_defender": null
