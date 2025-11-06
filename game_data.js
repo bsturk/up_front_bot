@@ -91,6 +91,7 @@ const CONDITIONS = {
     "IS_JAPANESE": "Nationality is Japanese",
     "HAS_VICTORY_LOCATION": "Victory condition(s) involve a 'Location'",
     "HAS_VICTORY_POINTS": "Victory condition(s) require Victory Points",
+    "PLAYER_HAS_VEHICLE": "Player has Vehicle/AFV in their OOB",
 };
 
 const TARGET_CRITERIA = {
@@ -492,11 +493,11 @@ const ACTION_DEFINITIONS = {
     },
     ACQUIRE_WEAPON: {
         text: ACTIONS.ACQUIRE_WEAPON.text, type: ACTIONS.ACQUIRE_WEAPON.type,
-        conditions: ["NEARBY_WEAPON_AVAILABLE"],
+        conditions: ["NEARBY_WEAPON_AVAILABLE", "PLAYER_HAS_VEHICLE"],
         targetingKey: "TARGET_WEAPON",
         instructionKey: "DRAW_RNC",
         postActionInstructionKey: "ACQUIRE_WEAPON_RESULT",
-        displayTriggerTextKeys: ["NEARBY_WEAPON_AVAILABLE"]
+        displayTriggerTextKeys: ["NEARBY_WEAPON_AVAILABLE", "PLAYER_HAS_VEHICLE"]
     },
     CHANGE_CREW: {
         text: ACTIONS.CHANGE_CREW.text, type: ACTIONS.CHANGE_CREW.type,
